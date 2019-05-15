@@ -178,7 +178,7 @@ def api_message():
             cur.execute("SELECT tag FROM restaurant_tag")
             temp = cur.fetchall()
             temp = [list(t) for t in temp]
-            logging.info(temp)
+            logging.info("Search result: {}".format(len(temp)))
             shuffle(temp)
             MENU = temp[0][0]
             cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%MENU%'))
@@ -187,6 +187,7 @@ def api_message():
             shuffle(temp)
             sending_message = temp[0][0]
             sending_message = re.sub(r'MENU',MENU,sending_message)
+        # เราแนะนำเมนูแล้วมันก้ถามต่อไปแดกร้านไหนดี
         elif question_type == 1:
             logging.debug("RESTAURANT CASE")
             if BRANCH != "":
@@ -201,7 +202,7 @@ def api_message():
             temp = cur.fetchall()
             RN = None
             temp = [list(t) for t in temp]
-            logging.info(temp)
+            logging.info("Search result: {}".format(len(temp)))
             shuffle(temp)
             RES_NAME = temp[0][0]
             cur.execute("SELECT name FROM restaurant_info WHERE id=%s",(RES_NAME))
@@ -216,25 +217,26 @@ def api_message():
         elif question_type == 2:
             logging.debug("RESTAURANT TYPE CASE")
             RT = None
-            if RES_NAME != -1 and data["res_topic"] != "":
+            if RES_NAME == "" and data["res_topic"] != -1:
                 try:
-                    print("RES ID: {}".format(data["res_topic"]))
+                    logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT tag FROM restaurant_tag WHERE 	res_id=%s",(data["res_topic"]))
                     temp = cur.fetchall()
-                    print("temp tag: {}".format(temp))
+                    logging.info("Search tag: {}".format(len(temp)))
                     if len(temp) > 0:
-                        RT = " ".join([temp[i][0] for i in range(len(temp))])       
+                        RT = " ".join([temp[i][0] for i in range(len(temp))])
+                    RES_NAME = data["res_topic"]    
                 except Exception as e:
                     pass
             else:
                 try:
-                    print("RES_NAME: {}".format(RES_NAME))
+                    logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                     temp = cur.fetchone()
                     RES_NAME = temp[0]
                     cur.execute("SELECT tag FROM restaurant_tag WHERE res_id=%s",(RES_NAME))
                     temp = cur.fetchall()
-                    print("temp tag: {}".format(temp))
+                    logging.info("Search tag: {}".format(len(temp)))
                     if len(temp) > 0:
                         RT = " ".join([temp[i][0] for i in range(len(temp))])            
                 except Exception as e:
@@ -416,8 +418,8 @@ def api_message():
         create_logs(data["message"], sending_message, data["userID"], "")
         logging.debug("LOG CREATED")
         logging.info("res_id: {}".format(RES_NAME))
-        logging.info("message reply: {}".format(sending_message))
         logging.info("previous: {}".format(data["message"]))
+        logging.info("message reply: {}".format(sending_message))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                    sys_question="",res_topic=RES_NAME,request_count=data["request_count"] + 1)
     elif predict_result == 1:
