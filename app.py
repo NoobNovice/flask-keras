@@ -191,13 +191,13 @@ def api_message():
         elif question_type == 1:
             logging.debug("RESTAURANT CASE")
             if BRANCH != "":
-                print("BRANCH")
+                logging.info("Search form branch")
                 cur.execute("SELECT res_id FROM restaurant_branch WHERE branch LIKE %s",('%'+BRANCH+'%'))
             elif MENU != "":
-                print("MENU")
+                logging.info("Search form menu")
                 cur.execute("SELECT res_id FROM restaurant_tag WHERE tag LIKE %s",('%'+MENU+'%'))
             else:
-                print("DEFAULT")
+                logging.info("Search random")
                 cur.execute("SELECT id FROM restaurant_info")
             temp = cur.fetchall()
             RN = None
@@ -382,7 +382,7 @@ def api_message():
             RC = None
             if RES_NAME == "" and data["res_topic"] != "":
                 try:
-                    print("RES ID: {}".format(data["res_topic"]))
+                    logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT contact FROM restaurant_info WHERE id=%s",(data["res_topic"]))
                     temp = cur.fetchone()
                     RC = temp[0]
@@ -390,7 +390,7 @@ def api_message():
                     pass
             else:
                 try:
-                    print("RES_NAME: {}".format(RES_NAME))
+                    logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT contact,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                     temp = cur.fetchone()
                     RES_NAME = temp[1]
