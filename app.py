@@ -56,8 +56,6 @@ def create_logs(message_in, message_out, user_id, sys_question):
 # API chat message
 @app.route('/message/requestMessage', methods=["POST"])
 def api_message():
-    print("question stack: {}".format(question_stack))
-    print("conversation stack: {}".format(conver_stack))
     data = json.loads(request.form["json_string"])
     # ตัดคำและแยกคลาส
     message_token = token(data["message"])
