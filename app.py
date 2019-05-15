@@ -263,6 +263,7 @@ def api_message():
             else:
                 sending_message = "ไม่รู้เหมือนกันอ่ะว่าเป็นร้านอะไร"
         elif question_type == 3:
+            logging.debug("PRICE CASE")
             RP = None
             if RES_NAME == "" and data["res_topic"] != "":
                 try:
@@ -342,10 +343,11 @@ def api_message():
             else:
                 sending_message = "ไม่รู้เวลาร้านนี้อ่ะ"
         elif question_type == 5:
+            logging.debug("LOCATION CASE")
             RL = None
             if RES_NAME == "" and data["res_topic"] != "":
                 try:
-                    print("RES ID: {}".format(data["res_topic"]))
+                    logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT address FROM restaurant_info WHERE id=%s",(data["res_topic"]))
                     temp = cur.fetchone()
                     RL = temp[0]
@@ -353,7 +355,7 @@ def api_message():
                     pass
             else:
                 try:
-                    print("RES_NAME: {}".format(RES_NAME))
+                    logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT address,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                     temp = cur.fetchone()
                     RES_NAME = temp[1]
@@ -376,6 +378,7 @@ def api_message():
             else:
                 sending_message = ""
         else:
+            logging.debug("CONTACT CASE")
             RC = None
             if RES_NAME == "" and data["res_topic"] != "":
                 try:
