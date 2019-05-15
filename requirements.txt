@@ -1,0 +1,9 @@
+flask
+flask-mysql
+flask-modus
+pythainlp
+gensim
+keras
+tensorflow
+marisa-trie
+matplotlib

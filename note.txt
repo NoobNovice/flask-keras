@@ -1,0 +1,66 @@
+﻿ # message_in = request.form["message"]
+        # token_message = token(message_in)
+        # temp = []
+        # for i in token_message:
+        #     try:
+        #         temp.append(wordVector_model[i])
+        #     except KeyError:
+        #         continue
+        # features = ([[0]*50 for j in range(25 - len(temp))] + temp)
+        # features = np.asarray(features).reshape(1,25,50)
+        # result = None
+        # with graph.as_default():
+        #     result = questionClassify_model.predict(features)
+        # result = result[0].tolist()
+        # sentence_class = result.index(max(result))
+        # message_out = None
+        # quest_out = None
+        # if sentence_class == 0:
+        #     message_out, quest_out = classify_conversation(features, message_in)
+        # elif sentence_class == 1:
+        #     pass
+        # elif sentence_class == 2:
+        #     pass
+        # else:
+        #     raise ValueError("sentence over case")
+        
+
+
+
+# def classify_conversation(features, message_in):
+#     ans = None
+#     qst = None
+#     conversation_type = None
+#     with graph.as_default():
+#         conversation_type = questionClassify_model.predict(features)
+#     conversation_type = 0
+#     if conversation_type == 4:  # fix case
+#         con = mysql.connect()
+#         cur = con.cursor()
+#         cur.execute("SELECT sentence FROM template_sentence WHERE sentence_in=%s",(message_in))
+#         ans = cur.fetchall()
+#         ans = [list(a) for a in ans]
+#         shuffle(ans)
+#         try:
+#             ans = ans[0][0]
+#         except IndexError:
+#             create_sysQuestion(message_in, "TMP")
+#             ans = "งงอ่ะ คือ?"
+#     else:
+#         con = mysql.connect()
+#         cur = con.cursor()
+#         cur.execute("SELECT sentence FROM template_sentence WHERE question_type=%s",(conversation_type)) 
+#         ans = cur.fetchall()
+#         ans = [list(a) for a in ans]
+#         shuffle(ans)
+#         act = round(random.uniform(0, 1))
+#         if act == 1:
+#             cur.execute("SELECT question FROM system_question") 
+#             qst = cur.fetchall()
+#             qst = [list(q) for q in qst]
+#             shuffle(qst)
+#             qst = qst[0][0]
+#         ans = ans[0][0]
+#     return ans, qst
+
+ps -ef | grep "command name"
