@@ -239,11 +239,15 @@ def api_message():
                         RT = " ".join([temp[i][0] for i in range(len(temp))])            
                 except Exception as e:
                     print(e)
-                    question_stack.append([data["userID"],RES_NAME,0])
+                    question_stack.append([data["userID"],data["message"],0])
+                    logging.debug("QUESTION ADDED")
+                    logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
-                    ans_pool = [None,None,None,None,None,None,None,0,0]
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "question_out")
+                    create_logs(data["message"], sending_message, data["userID"], "")
+                    logging.info("previous: {}".format(data["message"]))
+                    logging.info("message reply: {}".format(sending_message))
+                    logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic="",request_count=data["request_count"] + 1)
                     
@@ -274,11 +278,16 @@ def api_message():
                     RES_NAME = temp[1]
                     RP = temp[0]            
                 except Exception as e:
-                    question_stack.append([data["userID"],RES_NAME,0])
+                    print(e)
+                    question_stack.append([data["userID"],data["message"],0])
+                    logging.debug("QUESTION ADDED")
+                    logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
-                    ans_pool = [None,None,None,None,None,None,None,0,0]
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "question_out")
+                    create_logs(data["message"], sending_message, data["userID"], "")
+                    logging.info("previous: {}".format(data["message"]))
+                    logging.info("message reply: {}".format(sending_message))
+                    logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic="",request_count=data["request_count"] + 1)
             if RP != None:
@@ -308,11 +317,16 @@ def api_message():
                     RES_NAME = temp[1]
                     RO = temp[0]            
                 except Exception as e:
-                    question_stack.append([data["userID"],RES_NAME,0])
+                    print(e)
+                    question_stack.append([data["userID"],data["message"],0])
+                    logging.debug("QUESTION ADDED")
+                    logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
-                    ans_pool = [None,None,None,None,None,None,None,0,0]
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "question_out")
+                    create_logs(data["message"], sending_message, data["userID"], "")
+                    logging.info("previous: {}".format(data["message"]))
+                    logging.info("message reply: {}".format(sending_message))
+                    logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic="",request_count=data["request_count"] + 1)
 
@@ -343,11 +357,16 @@ def api_message():
                     RES_NAME = temp[1]
                     RL = temp[0]            
                 except Exception as e:
-                    question_stack.append([data["userID"],RES_NAME,0])
+                    print(e)
+                    question_stack.append([data["userID"],data["message"],0])
+                    logging.debug("QUESTION ADDED")
+                    logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
-                    ans_pool = [None,None,None,None,None,None,None,0,0]
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "question_out")
+                    create_logs(data["message"], sending_message, data["userID"], "")
+                    logging.info("previous: {}".format(data["message"]))
+                    logging.info("message reply: {}".format(sending_message))
+                    logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic="",request_count=data["request_count"] + 1)
             if RL != None:
@@ -372,11 +391,16 @@ def api_message():
                     RES_NAME = temp[1]
                     RC = temp[0]            
                 except Exception as e:
-                    question_stack.append([data["userID"],RES_NAME,0])
+                    print(e)
+                    question_stack.append([data["userID"],data["message"],0])
+                    logging.debug("QUESTION ADDED")
+                    logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
-                    ans_pool = [None,None,None,None,None,None,None,0,0]
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "question_out")
+                    create_logs(data["message"], sending_message, data["userID"], "")
+                    logging.info("previous: {}".format(data["message"]))
+                    logging.info("message reply: {}".format(sending_message))
+                    logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic="",request_count=data["request_count"] + 1)
             if RC != None:
@@ -392,7 +416,7 @@ def api_message():
         create_logs(data["message"], sending_message, data["userID"], "")
         logging.debug("LOG CREATED")
         logging.info("res_id: {}".format(RES_NAME))
-        logging.info("message reply: {}".format(message_out))
+        logging.info("message reply: {}".format(sending_message))
         logging.info("previous: {}".format(data["message"]))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                    sys_question="",res_topic=RES_NAME,request_count=data["request_count"] + 1)
