@@ -266,7 +266,7 @@ def api_message():
             RP = None
             if RES_NAME == "" and data["res_topic"] != "":
                 try:
-                    print("RES ID: {}".format(data["res_topic"]))
+                    logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT price FROM restaurant_info WHERE id=%s",(data["res_topic"]))
                     temp = cur.fetchone()
                     RP = temp[0]
@@ -274,13 +274,12 @@ def api_message():
                     pass
             else:
                 try:
-                    print("RES_NAME: {}".format(RES_NAME))
+                    logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT price,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                     temp = cur.fetchone()
                     RES_NAME = temp[1]
                     RP = temp[0]            
                 except Exception as e:
-                    print(e)
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
