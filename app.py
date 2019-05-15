@@ -159,22 +159,26 @@ def api_message():
     with graph.as_default():
         predict_result = intence_model.predict(message_vec)
     predict_result = predict_result.tolist()
-    logging.info("intence predict: {}".format(predict_result))
+    logging.info("intense predict: {}".format(predict_result))
     predict_result = predict_result[0].index(max(predict_result[0]))
     if predict_result == 0:
+        logging.debug("RESTAURANT QUESTION CASE")
         question_type = None
         with graph.as_default():
             question_type = question_model.predict(message_vec)
         question_type = question_type.tolist()
-        logging.info("question predict: {}".format(question_type))
+        logging.info("question type predict: {}".format(question_type))
         question_type = question_type[0].index(max(question_type[0]))
+
         sending_message = None
         con = mysql.connect()
         cur = con.cursor()
         if question_type == 0:
+            logging.debug("MENU CASE")
             cur.execute("SELECT tag FROM restaurant_tag")
             temp = cur.fetchall()
             temp = [list(t) for t in temp]
+            logging.info(temp)
             shuffle(temp)
             MENU = temp[0][0]
             cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%MENU%'))
@@ -184,15 +188,20 @@ def api_message():
             sending_message = temp[0][0]
             sending_message = re.sub(r'MENU',MENU,sending_message)
         elif question_type == 1:
+            logging.debug("RESTAURANT CASE")
             if BRANCH != "":
+                print("BRANCH")
                 cur.execute("SELECT res_id FROM restaurant_branch WHERE branch LIKE %s",('%'+BRANCH+'%'))
             elif MENU != "":
+                print("MENU")
                 cur.execute("SELECT res_id FROM restaurant_tag WHERE tag LIKE %s",('%'+MENU+'%'))
             else:
+                print("DEFAULT")
                 cur.execute("SELECT id FROM restaurant_info")
             temp = cur.fetchall()
             RN = None
             temp = [list(t) for t in temp]
+            logging.info(temp)
             shuffle(temp)
             RES_NAME = temp[0][0]
             cur.execute("SELECT name FROM restaurant_info WHERE id=%s",(RES_NAME))
@@ -205,8 +214,9 @@ def api_message():
             sending_message = temp[0][0]
             sending_message = re.sub(r'RN',RN,sending_message)
         elif question_type == 2:
+            logging.debug("RESTAURANT TYPE CASE")
             RT = None
-            if RES_NAME == "" and data["res_topic"] != "":
+            if RES_NAME != -1 and data["res_topic"] != "":
                 try:
                     print("RES ID: {}".format(data["res_topic"]))
                     cur.execute("SELECT tag FROM restaurant_tag WHERE 	res_id=%s",(data["res_topic"]))
@@ -379,7 +389,11 @@ def api_message():
             else:
                 sending_message = "ไม่มีเบอร์ร้านนี้อ่ะ"
         cur.close()
-        create_logs(data["message"], sending_message, data["userID"], "question_out")
+        create_logs(data["message"], sending_message, data["userID"], "")
+        logging.debug("LOG CREATED")
+        logging.info("res_id: {}".format(RES_NAME))
+        logging.info("message reply: {}".format(message_out))
+        logging.info("previous: {}".format(data["message"]))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                    sys_question="",res_topic=RES_NAME,request_count=data["request_count"] + 1)
     elif predict_result == 1:
@@ -436,6 +450,7 @@ def api_message():
         logging.info("previous message: {}".format(data["previous_message"]))
         message_out = None
         previous_message = None
+        sys_question = ""
         con = mysql.connect()
         cur = con.cursor()
 
@@ -451,6 +466,16 @@ def api_message():
                 con.commit()
                 logging.debug("PAIR SENTENCE CREATED")
         
+        if data["previous_message"] == question_stack[0]:
+            previous_message = ""
+            message_out = "โอเคจะคราวหน้าจะได้ตอบถูก"
+            logging.info("previous: {}".format(previous_message))
+            logging.info("message reply: {}".format(message_out))
+            logging.info("question: {}".format(sys_question))
+            return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
+                       sys_question=sys_question,res_topic="",
+                       request_count=req + 1)
+
         general_message = tag(data["message"])
         logging.info("Normalization: {}".format(general_message))
         cur.execute("SELECT * FROM template_conversation WHERE sentence_in=%s",(general_message))
@@ -471,7 +496,6 @@ def api_message():
             message_out = "เอิ่มหมายถึงอะไรเหรอ"
         
         cur.close()
-        sys_question = ""
         req = data["request_count"]
         treshold = 1 - (req/5)
         alpha = random.random() - 0.1
