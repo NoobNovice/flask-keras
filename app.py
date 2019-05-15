@@ -265,7 +265,7 @@ def api_message():
         elif question_type == 3:
             logging.debug("PRICE CASE")
             RP = None
-            if RES_NAME == "" and data["res_topic"] != "":
+            if RES_NAME == "" and data["res_topic"] != -1:
                 try:
                     logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT price FROM restaurant_info WHERE id=%s",(data["res_topic"]))
@@ -304,7 +304,7 @@ def api_message():
         elif question_type == 4:
             logging.debug("TIME CASE")
             RO = None
-            if RES_NAME == "" and data["res_topic"] != "":
+            if RES_NAME == "" and data["res_topic"] != -1:
                 try:
                     logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT time FROM restaurant_info WHERE id=%s",(data["res_topic"]))
@@ -345,7 +345,7 @@ def api_message():
         elif question_type == 5:
             logging.debug("LOCATION CASE")
             RL = None
-            if RES_NAME == "" and data["res_topic"] != "":
+            if RES_NAME == "" and data["res_topic"] != -1:
                 try:
                     logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT address FROM restaurant_info WHERE id=%s",(data["res_topic"]))
@@ -380,7 +380,7 @@ def api_message():
         else:
             logging.debug("CONTACT CASE")
             RC = None
-            if RES_NAME == "" and data["res_topic"] != "":
+            if RES_NAME == "" and data["res_topic"] != -1:
                 try:
                     logging.info("Search form res_id: {}".format(data["res_topic"]))
                     cur.execute("SELECT contact FROM restaurant_info WHERE id=%s",(data["res_topic"]))
