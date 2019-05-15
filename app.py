@@ -465,16 +465,17 @@ def api_message():
                     (general_message, data["message"], 0))
                 con.commit()
                 logging.debug("PAIR SENTENCE CREATED")
-        
-        if data["previous_message"] == question_stack[0]:
-            previous_message = ""
-            message_out = "โอเคจะคราวหน้าจะได้ตอบถูก"
-            logging.info("previous: {}".format(previous_message))
-            logging.info("message reply: {}".format(message_out))
-            logging.info("question: {}".format(sys_question))
-            return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
-                       sys_question=sys_question,res_topic="",
-                       request_count=req + 1)
+        try:
+            if data["previous_message"] == question_stack[0]:
+                previous_message = ""
+                message_out = "โอเคจะคราวหน้าจะได้ตอบถูก"
+                logging.info("previous: {}".format(previous_message))
+                logging.info("message reply: {}".format(message_out))
+                logging.info("question: {}".format(sys_question))
+                return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
+                                sys_question=sys_question,res_topic="",request_count=req + 1)
+        except:
+            pass
 
         general_message = tag(data["message"])
         logging.info("Normalization: {}".format(general_message))
