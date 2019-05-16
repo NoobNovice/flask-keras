@@ -253,6 +253,7 @@ def api_message():
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
+                    logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
                     
@@ -293,6 +294,7 @@ def api_message():
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
+                    logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
             if RP != None:
@@ -333,6 +335,7 @@ def api_message():
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
+                    logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
 
@@ -374,6 +377,7 @@ def api_message():
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
+                    logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
             if RL != None:
@@ -409,6 +413,7 @@ def api_message():
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
+                    logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
             if RC != None:
@@ -426,54 +431,56 @@ def api_message():
         logging.info("res_id: {}".format(RES_NAME))
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
+        logging.info("log id: {}".format(log_id))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
-        con = mysql.connect()
-        cur = con.cursor()
-        try:
-            if reliability >= ans_pool[7]:
-                if RES_NAME != "":
-                    ans_pool[0] = RES_NAME
-                if PRICE != "":
-                    ans_pool[1] = PRICE
-                if TIME != "":
-                    ans_pool[2] = TIME
-                if CONTACT != "":
-                    ans_pool[3] = CONTACT
-                if len(LOCATION) > 0:
-                    ans_pool[4] = LOCATION[0]
-                if BRANCH != "":
-                    ans_pool[5] = BRANCH
-                if MENU != "":
-                    ans_pool[6] = MENU
-                ans_pool[7] = reliability
-                ans_pool[8] += 1
+        # con = mysql.connect()
+        # cur = con.cursor()
+        # try:
+        #     if reliability >= ans_pool[7]:
+        #         if RES_NAME != "":
+        #             ans_pool[0] = RES_NAME
+        #         if PRICE != "":
+        #             ans_pool[1] = PRICE
+        #         if TIME != "":
+        #             ans_pool[2] = TIME
+        #         if CONTACT != "":
+        #             ans_pool[3] = CONTACT
+        #         if len(LOCATION) > 0:
+        #             ans_pool[4] = LOCATION[0]
+        #         if BRANCH != "":
+        #             ans_pool[5] = BRANCH
+        #         if MENU != "":
+        #             ans_pool[6] = MENU
+        #         ans_pool[7] = reliability
+        #         ans_pool[8] += 1
         
-            if ans_pool[8] >= 3:
-                try:
-                    cur.execute("INSERT INTO restaurant_info(name, price, time, contact, address) VALUES(%s, %s, %s, %s, %s)", 
-                                (ans_pool[0], ans_pool[1], ans_pool[2], ans_pool[3], ans_pool[4]))
-                    con.commit()
-                    cur.execute("SELECT id FROM restaurant_info WHERE name=%s",(ans_pool[0]))
-                    temp = cur.fetchone()
-                    if ans_pool[5] != None:
-                        cur.execute("INSERT INTO restaurant_branch(res_id, branch) VALUES(%s, %s)", 
-                                    (temp[0], ans_pool[5]))
-                        con.commit()
-                    if ans_pool[6] != None:
-                        cur.execute("INSERT INTO restaurant_tag(res_id, tag) VALUES(%s, %s)", 
-                                    (temp[0], ans_pool[6]))
-                        con.commit()
-                    question_stack.pop(0)
-                    ans_pool = None
-                except Exception as e:
-                    print(e)
-                    pass
-        except:
-            pass
-        print(ans_pool)
-        log_id = create_logs(data["message"], "message_out", data["userID"], "question_out")
+        #     if ans_pool[8] >= 3:
+        #         try:
+        #             cur.execute("INSERT INTO restaurant_info(name, price, time, contact, address) VALUES(%s, %s, %s, %s, %s)", 
+        #                         (ans_pool[0], ans_pool[1], ans_pool[2], ans_pool[3], ans_pool[4]))
+        #             con.commit()
+        #             cur.execute("SELECT id FROM restaurant_info WHERE name=%s",(ans_pool[0]))
+        #             temp = cur.fetchone()
+        #             if ans_pool[5] != None:
+        #                 cur.execute("INSERT INTO restaurant_branch(res_id, branch) VALUES(%s, %s)", 
+        #                             (temp[0], ans_pool[5]))
+        #                 con.commit()
+        #             if ans_pool[6] != None:
+        #                 cur.execute("INSERT INTO restaurant_tag(res_id, tag) VALUES(%s, %s)", 
+        #                             (temp[0], ans_pool[6]))
+        #                 con.commit()
+        #             question_stack.pop(0)
+        #             ans_pool = None
+        #         except Exception as e:
+        #             print(e)
+        #             pass
+        # except:
+        #     pass
+        # print(ans_pool)
+        # log_id = create_logs(data["message"], "message_out", data["userID"], "question_out")
+        # logging.info("log id: {}".format(log_id))
         return jsonify(userID=data["userID"],previous_message="",message="receive information: " + reliability,
                    sys_question="",res_topic="",menu_id="",log_id=log_id,request_count=data["request_count"] + 1)
     else:
@@ -545,11 +552,12 @@ def api_message():
             except Exception as e:
                 pass
 
-        create_logs(data["message"], message_out, data["userID"], sys_question)
+        log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
         logging.debug("LOG CREATED")
         logging.info("previous: {}".format(previous_message))
         logging.info("message reply: {}".format(message_out))
         logging.info("question: {}".format(sys_question))
+        logging.info("log id: {}".format(log_id))
         return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
                        sys_question=sys_question,res_topic="",
                        request_count=req + 1)
