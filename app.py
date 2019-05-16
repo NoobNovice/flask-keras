@@ -279,7 +279,7 @@ def api_message():
                 temp = cur.fetchone()
                 RP = temp[0]
                 RES_NAME = data["res_topic"]
-            elif:
+            elif RES_NAME != "":
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT price,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
