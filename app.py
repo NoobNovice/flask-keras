@@ -500,7 +500,7 @@ def api_message():
         cur = con.cursor()
 
         try:
-            if re.search(conver_stack[0][0], data["previous_message"]):
+            if re.match(conver_stack[0][0], data["previous_message"]):
                 conver_stack[0][1] += 1
                 if conver_stack[0][1] > 5:
                     conver_stack.pop(0)
@@ -553,12 +553,8 @@ def api_message():
         if alpha > treshold:
             req = 0
             try:
-                index = random.randint(0,len(conver_stack)-1)
-                sys_question = "นี่ถามหน่อย ถ้ามีคนถามว่า \"" + conver_stack[index][0] + "\" จะตอบยังไงดี"
-                conver_stack[index][1] += 1
-                if conver_stack[index][1] > 3:
-                    conver_stack.pop(index)
-                previous_message = conver_stack[index][0]
+                sys_question = "นี่ถามหน่อย ถ้ามีคนถามว่า \"" + conver_stack[0][0] + "\" จะตอบยังไงดี"
+                previous_message = conver_stack[0][0]
                 logging.debug("QUESTION ADDED")
             except Exception as e:
                 pass
