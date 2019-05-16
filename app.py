@@ -191,8 +191,7 @@ def api_message():
             temp = [list(t) for t in temp]
             shuffle(temp)
             sending_message = temp[0][0]
-            sending_message = re.sub(r'MENU',MENU,sending_message)
-        # เราแนะนำเมนูแล้วมันก้ถามต่อไปแดกร้านไหนดี
+            sending_message = re.sub(r'MENU',MENU_NAME,sending_message)
         elif question_type == 1:
             logging.debug("RESTAURANT CASE")
             logging.info("menu id: {}".format(data["menu_id"]))
