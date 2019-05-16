@@ -617,7 +617,8 @@ def api_replySignal():
     #             ans_pool = [None,None,None,None,None,None,None,0,0]
     #         return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
 
-    return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
+    # return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
+    return jsonify(userID="",reply_data="",res_id="",stage_data="")
 
 #API report log
 @app.route('/log/report', methods=["POST"])
