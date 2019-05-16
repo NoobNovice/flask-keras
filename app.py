@@ -511,7 +511,7 @@ def api_message():
                 if conver_stack[0][1] > 5:
                     conver_stack.pop(0)
                 return jsonify(userID=data["userID"],previous_message="",message=message_out,
-                                sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=req + 1)
+                                sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=0)
         except Exception as e:
             print(e)
             if e is IndexError:
