@@ -256,7 +256,6 @@ def api_message():
                     log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
-                    logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
@@ -297,7 +296,6 @@ def api_message():
                     log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
-                    logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
@@ -337,7 +335,6 @@ def api_message():
                     log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
-                    logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
@@ -378,7 +375,6 @@ def api_message():
                     log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
-                    logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
@@ -413,7 +409,6 @@ def api_message():
                     log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
-                    logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
@@ -440,7 +435,7 @@ def api_message():
         logging.info("log id: {}".format(log_id))
         logging.info("menu id: {}".format(MENU))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
+                        sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
         sending_message = ""
         logging.debug("INFORMATION CASE")
