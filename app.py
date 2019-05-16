@@ -234,7 +234,7 @@ def api_message():
                 if len(temp) > 0:
                     RT = " ".join([temp[i][0] for i in range(len(temp))])
                 RES_NAME = data["res_topic"]    
-            else:
+            elif RES_NAME != "":
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
@@ -269,7 +269,7 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RT',RT,sending_message)
             else:
-                sending_message = "ไม่รู้เหมือนกันอ่ะว่าเป็นร้านอะไร"
+                sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
         elif question_type == 3:
             logging.debug("PRICE CASE")
             RP = None
@@ -279,7 +279,7 @@ def api_message():
                 temp = cur.fetchone()
                 RP = temp[0]
                 RES_NAME = data["res_topic"]
-            else:
+            elif:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT price,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
@@ -309,7 +309,7 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RP',RP,sending_message)
             else:
-                sending_message = "ไม่รู้ราคาอาหารร้านนี้อ่ะ"
+                sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
         elif question_type == 4:
             logging.debug("TIME CASE")
             RO = None
@@ -319,7 +319,7 @@ def api_message():
                 temp = cur.fetchone()
                 RO = temp[0]
                 RES_NAME = data["res_topic"]
-            else:
+            elif RES_NAME != "":
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT time,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
@@ -360,7 +360,7 @@ def api_message():
                 temp = cur.fetchone()
                 RL = temp[0]
                 RES_NAME = data["res_topic"]
-            else:
+            elif RES_NAME != "":
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT address,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
@@ -385,7 +385,7 @@ def api_message():
             if RL != None:
                 sending_message = RL
             else:
-                sending_message = "ไม่มีลิ้งค์ร้านอ่ะ"
+                sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
         else:
             logging.debug("CONTACT CASE")
             RC = None
@@ -395,7 +395,7 @@ def api_message():
                 temp = cur.fetchone()
                 RC = temp[0]
                 RES_NAME = data["res_topic"]
-            else:
+            elif RES_NAME != "":
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT contact,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
@@ -425,7 +425,7 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RC',RC,sending_message)
             else:
-                sending_message = "ไม่มีเบอร์ร้านนี้อ่ะ"
+                sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
 
