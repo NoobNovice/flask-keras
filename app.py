@@ -179,12 +179,13 @@ def api_message():
         cur = con.cursor()
         if question_type == 0:
             logging.debug("MENU CASE")
-            cur.execute("SELECT tag FROM restaurant_tag")
+            cur.execute("SELECT tag,id FROM restaurant_tag")
             temp = cur.fetchall()
             temp = [list(t) for t in temp]
             logging.info("Search result: {}".format(len(temp)))
             shuffle(temp)
-            MENU = temp[0][0]
+            MENU_NAME = [0][0]
+            MENU = temp[0][1]
             cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%MENU%'))
             temp = cur.fetchall()
             temp = [list(t) for t in temp]
@@ -437,9 +438,10 @@ def api_message():
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
         logging.info("log id: {}".format(log_id))
-        if RES_NAME == "":
+        logging.info("menu id: {}".format(MENU))
+        if RES_NAME is not int:
             RES_NAME = -1
-        if MENU == "":
+        if MENU is not int:
             MENU = -1
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
