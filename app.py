@@ -31,7 +31,7 @@ with open(dir_path + '/NLP_model/dict/cc_vector.txt', 'r', encoding='utf-8-sig')
     f.close()
 question_stack = []
 conver_stack = []
-ans_pool = None
+ans_pool = []
 
 # web config
 app = Flask(__name__)
@@ -226,16 +226,13 @@ def api_message():
             logging.debug("RESTAURANT TYPE CASE")
             RT = None
             if RES_NAME == "" and data["res_topic"] != -1:
-                try:
-                    logging.info("Search form res_id: {}".format(data["res_topic"]))
-                    cur.execute("SELECT tag FROM restaurant_tag WHERE 	res_id=%s",(data["res_topic"]))
-                    temp = cur.fetchall()
-                    logging.info("Search tag: {}".format(len(temp)))
-                    if len(temp) > 0:
-                        RT = " ".join([temp[i][0] for i in range(len(temp))])
-                    RES_NAME = data["res_topic"]    
-                except Exception as e:
-                    RES_NAME = -1
+                logging.info("Search form res_id: {}".format(data["res_topic"]))
+                cur.execute("SELECT tag FROM restaurant_tag WHERE 	res_id=%s",(data["res_topic"]))
+                temp = cur.fetchall()
+                logging.info("Search tag: {}".format(len(temp)))
+                if len(temp) > 0:
+                    RT = " ".join([temp[i][0] for i in range(len(temp))])
+                RES_NAME = data["res_topic"]    
             else:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
@@ -249,6 +246,7 @@ def api_message():
                         RT = " ".join([temp[i][0] for i in range(len(temp))])            
                 except Exception as e:
                     RES_NAME = -1
+                    MENU = -1
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
@@ -260,7 +258,7 @@ def api_message():
                     logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
                     
             if RT != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RT%'))
@@ -275,13 +273,11 @@ def api_message():
             logging.debug("PRICE CASE")
             RP = None
             if RES_NAME == "" and data["res_topic"] != -1:
-                try:
-                    logging.info("Search form res_id: {}".format(data["res_topic"]))
-                    cur.execute("SELECT price FROM restaurant_info WHERE id=%s",(data["res_topic"]))
-                    temp = cur.fetchone()
-                    RP = temp[0]
-                except Exception as e:
-                    pass
+                logging.info("Search form res_id: {}".format(data["res_topic"]))
+                cur.execute("SELECT price FROM restaurant_info WHERE id=%s",(data["res_topic"]))
+                temp = cur.fetchone()
+                RP = temp[0]
+                RES_NAME = data["res_topic"]
             else:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
@@ -290,6 +286,8 @@ def api_message():
                     RES_NAME = temp[1]
                     RP = temp[0]            
                 except Exception as e:
+                    RES_NAME = -1
+                    MENU = -1
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
@@ -301,7 +299,7 @@ def api_message():
                     logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
             if RP != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RP%'))
                 temp = cur.fetchall()
@@ -315,13 +313,11 @@ def api_message():
             logging.debug("TIME CASE")
             RO = None
             if RES_NAME == "" and data["res_topic"] != -1:
-                try:
-                    logging.info("Search form res_id: {}".format(data["res_topic"]))
-                    cur.execute("SELECT time FROM restaurant_info WHERE id=%s",(data["res_topic"]))
-                    temp = cur.fetchone()
-                    RO = temp[0]
-                except Exception as e:
-                    pass
+                logging.info("Search form res_id: {}".format(data["res_topic"]))
+                cur.execute("SELECT time FROM restaurant_info WHERE id=%s",(data["res_topic"]))
+                temp = cur.fetchone()
+                RO = temp[0]
+                RES_NAME = data["res_topic"]
             else:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
@@ -330,7 +326,8 @@ def api_message():
                     RES_NAME = temp[1]
                     RO = temp[0]            
                 except Exception as e:
-                    print(e)
+                    RES_NAME = -1
+                    MENU = -1
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
@@ -342,7 +339,7 @@ def api_message():
                     logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
 
             if RO != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RO%'))
@@ -357,22 +354,21 @@ def api_message():
             logging.debug("LOCATION CASE")
             RL = None
             if RES_NAME == "" and data["res_topic"] != -1:
-                try:
-                    logging.info("Search form res_id: {}".format(data["res_topic"]))
-                    cur.execute("SELECT address FROM restaurant_info WHERE id=%s",(data["res_topic"]))
-                    temp = cur.fetchone()
-                    RL = temp[0]
-                except Exception as e:
-                    pass
+                logging.info("Search form res_id: {}".format(data["res_topic"]))
+                cur.execute("SELECT address FROM restaurant_info WHERE id=%s",(data["res_topic"]))
+                temp = cur.fetchone()
+                RL = temp[0]
+                RES_NAME = data["res_topic"]
             else:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
                     cur.execute("SELECT address,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                     temp = cur.fetchone()
                     RES_NAME = temp[1]
-                    RL = temp[0]            
+                    RL = temp[0]   
                 except Exception as e:
-                    print(e)
+                    RES_NAME = -1
+                    MENU = -1
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
@@ -384,22 +380,20 @@ def api_message():
                     logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
             if RL != None:
                 sending_message = RL
             else:
-                sending_message = ""
+                sending_message = "ไม่มีลิ้งค์ร้านอ่ะ"
         else:
             logging.debug("CONTACT CASE")
             RC = None
             if RES_NAME == "" and data["res_topic"] != -1:
-                try:
-                    logging.info("Search form res_id: {}".format(data["res_topic"]))
-                    cur.execute("SELECT contact FROM restaurant_info WHERE id=%s",(data["res_topic"]))
-                    temp = cur.fetchone()
-                    RC = temp[0]
-                except Exception as e:
-                    pass
+                logging.info("Search form res_id: {}".format(data["res_topic"]))
+                cur.execute("SELECT contact FROM restaurant_info WHERE id=%s",(data["res_topic"]))
+                temp = cur.fetchone()
+                RC = temp[0]
+                RES_NAME = data["res_topic"]
             else:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
@@ -408,7 +402,8 @@ def api_message():
                     RES_NAME = temp[1]
                     RC = temp[0]            
                 except Exception as e:
-                    print(e)
+                    RES_NAME = -1
+                    MENU = -1
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
@@ -420,7 +415,7 @@ def api_message():
                     logging.info("question: {}".format(sys_question))
                     logging.info("log id: {}".format(log_id))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
             if RC != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RC%'))
                 temp = cur.fetchall()
@@ -432,16 +427,17 @@ def api_message():
                 sending_message = "ไม่มีเบอร์ร้านนี้อ่ะ"
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
+
+        if RES_NAME is not int:
+            RES_NAME = -1
+        if MENU is not int:
+            MENU = -1
         logging.debug("LOG CREATED")
         logging.info("res_id: {}".format(RES_NAME))
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
         logging.info("log id: {}".format(log_id))
         logging.info("menu id: {}".format(MENU))
-        if RES_NAME is not int:
-            RES_NAME = -1
-        if MENU is not int:
-            MENU = -1
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
@@ -503,28 +499,33 @@ def api_message():
         con = mysql.connect()
         cur = con.cursor()
 
+        try:
+            if conver_stack[0][0] == data["previous_message"]:
+                general_message = tag(conver_stack[0][0])
+                cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
+                        (general_message, data["message"], 0))
+                con.commit()
+                logging.debug("ANSWER CONVER ADDED")
+                message_out = "โอเคคราวหน้าเราจะได้ตอบถูก"
+                conver_stack[0][1] += 1
+                if conver_stack[0][1] > 5:
+                    conver_stack.pop(0)
+                return jsonify(userID=data["userID"],previous_message="",message=message_out,
+                                sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=0)
+        except Exception as e:
+            if e is IndexError:
+                pass
+                
         if data["previous_message"] != "":
             general_message = tag(data["previous_message"])
             cur.execute("SELECT * FROM template_conversation WHERE sentence_in=%s AND sentence=%s",
                         (general_message, data["message"]))
             temp = cur.fetchone()
             if not temp:
-                timestamp = datetime.now()
                 cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
                     (general_message, data["message"], 0))
                 con.commit()
                 logging.debug("PAIR SENTENCE CREATED")
-        try:
-            if data["previous_message"] == question_stack[0]:
-                previous_message = ""
-                message_out = "โอเคจะคราวหน้าจะได้ตอบถูก"
-                logging.info("previous: {}".format(previous_message))
-                logging.info("message reply: {}".format(message_out))
-                logging.info("question: {}".format(sys_question))
-                return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
-                                sys_question=sys_question,res_topic="",request_count=req + 1)
-        except:
-            pass
 
         general_message = tag(data["message"])
         logging.info("Normalization: {}".format(general_message))
@@ -545,23 +546,19 @@ def api_message():
             previous_message = ""
             message_out = "เอิ่มหมายถึงอะไรเหรอ"
         
-        cur.close()
         req = data["request_count"]
-        treshold = 1 - (req/5)
+        treshold = 1 - (req/10)
         alpha = random.random() - 0.1
         if alpha > treshold:
             req = 0
             try:
-                index = random.randint(0,len(conver_stack)-1)
-                sys_question = "นี่ถามหน่อย ถ้ามีคนถามว่า \"" + conver_stack[index][0] + "\" จะตอบยังไงดี"
-                conver_stack[index][1] += 1
-                if conver_stack[index][1] > 3:
-                    conver_stack.pop(index)
-                previous_message = conver_stack[index][0]
+                sys_question = "นี่ถามหน่อย ถ้ามีคนถามว่า \"" + conver_stack[0][0] + "\" จะตอบยังไงดี"
+                previous_message = conver_stack[0][0]
                 logging.debug("QUESTION ADDED")
             except Exception as e:
                 pass
 
+        cur.close()
         log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
         logging.debug("LOG CREATED")
         logging.info("previous: {}".format(previous_message))
@@ -640,6 +637,8 @@ def api_replySignal():
 #API report log
 @app.route('/log/report', methods=["POST"])
 def api_logReport():
+    if request.form["log_id"] == "":
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     try:
         con = mysql.connect()
         cur = con.cursor()

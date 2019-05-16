@@ -1,5 +1,6 @@
-x = ""
+import re
 
-if x is not int:
-    x = -1
-print(x)
+x = "dsdfa  xxxx skjjf;al"
+
+if re.search("xxxx",x):
+    print("k")
