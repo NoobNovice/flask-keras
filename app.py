@@ -526,6 +526,7 @@ def api_message():
                     (general_message, data["message"], 0))
                 con.commit()
                 logging.debug("PAIR SENTENCE CREATED")
+            if
 
         general_message = tag(data["message"])
         logging.info("Normalization: {}".format(general_message))
