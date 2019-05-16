@@ -32,6 +32,7 @@ with open(dir_path + '/NLP_model/dict/cc_vector.txt', 'r', encoding='utf-8-sig')
 question_stack = []
 conver_stack = []
 ans_pool = []
+tempANS_list = []
 
 # web config
 app = Flask(__name__)
@@ -441,54 +442,32 @@ def api_message():
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
-        # con = mysql.connect()
-        # cur = con.cursor()
-        # try:
-        #     if reliability >= ans_pool[7]:
-        #         if RES_NAME != "":
-        #             ans_pool[0] = RES_NAME
-        #         if PRICE != "":
-        #             ans_pool[1] = PRICE
-        #         if TIME != "":
-        #             ans_pool[2] = TIME
-        #         if CONTACT != "":
-        #             ans_pool[3] = CONTACT
-        #         if len(LOCATION) > 0:
-        #             ans_pool[4] = LOCATION[0]
-        #         if BRANCH != "":
-        #             ans_pool[5] = BRANCH
-        #         if MENU != "":
-        #             ans_pool[6] = MENU
-        #         ans_pool[7] = reliability
-        #         ans_pool[8] += 1
-        
-        #     if ans_pool[8] >= 3:
-        #         try:
-        #             cur.execute("INSERT INTO restaurant_info(name, price, time, contact, address) VALUES(%s, %s, %s, %s, %s)", 
-        #                         (ans_pool[0], ans_pool[1], ans_pool[2], ans_pool[3], ans_pool[4]))
-        #             con.commit()
-        #             cur.execute("SELECT id FROM restaurant_info WHERE name=%s",(ans_pool[0]))
-        #             temp = cur.fetchone()
-        #             if ans_pool[5] != None:
-        #                 cur.execute("INSERT INTO restaurant_branch(res_id, branch) VALUES(%s, %s)", 
-        #                             (temp[0], ans_pool[5]))
-        #                 con.commit()
-        #             if ans_pool[6] != None:
-        #                 cur.execute("INSERT INTO restaurant_tag(res_id, tag) VALUES(%s, %s)", 
-        #                             (temp[0], ans_pool[6]))
-        #                 con.commit()
-        #             question_stack.pop(0)
-        #             ans_pool = None
-        #         except Exception as e:
-        #             print(e)
-        #             pass
-        # except:
-        #     pass
-        # print(ans_pool)
-        # log_id = create_logs(data["message"], "message_out", data["userID"], "question_out")
-        # logging.info("log id: {}".format(log_id))
-        return jsonify(userID=data["userID"],previous_message="",message="receive information: " + str(reliability),
-                   sys_question="",res_topic="",menu_id="",log_id=log_id,request_count=data["request_count"] + 1)
+        sending_message = ""
+        logging.debug("INFORMATION CASE")
+        if data["previous_message"] == question_stack[0][2]:
+            logging.debug("CREATE ANSWER TEMP")
+            tempANS_list.append([data["userID"],data["message"],reliability])
+            sending_message = "ขอบใจมากนะ"
+        else:
+            logging.debug("CLASSIFY ERROR")
+            sending_message = "คลุมเครือเหลือเกิน ไม่เข้าใจคำถามอะ"
+
+        try:
+            if len(tempANS_list) >= 5:
+                logging.debug("ANS CREATE")
+                max_index = []
+                for i in tempANS_list:
+                    max_index.append(i[2])
+                ans_pool.append(tempANS_list.index(max(max_index)))
+                tempANS_list = []
+                logging.info("ans pool: {}".format(ans_pool))
+        except:
+            pass
+
+        log_id = create_logs(data["message"], sending_message, data["userID"], "")
+        logging.info("log id: {}".format(log_id))
+        return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                        sys_question="",res_topic=-1,menu_id=-1,log_id=log_id,request_count=data["request_count"])  
     else:
         logging.debug("CONVERSATION CASE")
         logging.info("user message: {}".format(data["message"]))
@@ -598,41 +577,30 @@ def api_userLogin():
 #API check signal
 @app.route('/signal', methods=["POST"])
 def api_replySignal():
-    # con = mysql.connect()
-    # cur = con.cursor()
-    # data = json.loads(request.form["json_string"])
-
-    # print("question stack: {}".format(question_stack))
-    # print("conversation stack: {}".format(conver_stack))
-    # # เช็คใน tabel คิวคำตอบ
-    # cur.execute("SELECT * FROM restaurant_answer WHERE user_id=%s",(data["userID"]))
-    # reply_answer = cur.fetchone()
-    # if not reply_answer:
-    #     pass
-    # else:
-    #     cur.execute("DELETE FROM restaurant_answer WHERE id=%s",(reply_answer[0]))
-    #     con.commit()
-    #     cur.execute("SELECT * FROM restaurant_info WHERE id=%s",(reply_answer[1]))
-    #     reply_answer = cur.fetchone()
-    #     cur.close()
-    #     sending_message = "เออร้านที่ถามครั้งก่อนอ่ะร้าน" + reply_answer[1] + "รู้ข้อมูลแล้วนะถามมาได้เลย"
-    #     return jsonify(userID=data["userID"],reply_data=sending_message,res_id=reply_answer[0],
-    #                    stage_data="answer")
+    data = json.loads(request.form["json_string"])
     
-    # # เช็คใน tabel คิวคำถามร้านอาหาร
-    # if len(question_stack) == 0:
-    #     pass
-    # else:
-    #     if question_stack[0][0] == data["userID"]:
-    #         sending_message = "ผมมีคำถามครับแนะนำข้อมูลร้าน " + question_stack[0][1] + " หน่อยสิ"
-    #         question_stack[0][2] += 1
-    #         if question_stack[0][2] > 5:
-    #             question_stack.pop(0)
-    #             ans_pool = [None,None,None,None,None,None,None,0,0]
-    #         return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
+    logging.debug("answer pool: {}".format(ans_pool))
+    # คิวคำตอบ
+    for i in range(len(ans_pool)):
+        if ans_pool[i][0] == data["userID"]:
+            sending_message = "เออร้านที่ถามครั้งก่อนอ่ะเพื่อนบอกมาว่า" + ans_pool[i][1]
+            ans_pool.pop(i)
+            return jsonify(userID=data["userID"],reply_data=sending_message,stage_data="answer")
+    
+    # คิวคำถามร้านอาหาร
+    try:
+        if question_stack[0][0] != data["userID"]:
+            sending_message = question_stack[0][1]
+            question_stack[0][2] += 1
+            if question_stack[0][2] > 10:
+                question_stack.pop(0)
+                tempANS_list = []
+            return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
+    except Exception as e:
+        print(e)
+        pass
 
-    # return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
-    return jsonify(userID="",reply_data="",res_id="",stage_data="")
+    return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
 
 #API report log
 @app.route('/log/report', methods=["POST"])
