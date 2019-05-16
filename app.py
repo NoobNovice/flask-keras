@@ -444,7 +444,7 @@ def api_message():
     elif predict_result == 1:
         sending_message = ""
         logging.debug("INFORMATION CASE")
-        if data["previous_message"] == question_stack[0][2]:
+        if data["previous_message"] == question_stack[0][1]:
             logging.debug("CREATE ANSWER TEMP")
             tempANS_list.append([data["userID"],data["message"],reliability])
             sending_message = "ขอบใจมากนะ"
