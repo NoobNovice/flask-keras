@@ -54,7 +54,7 @@ def create_logs(message_in, message_out, user_id, sys_question):
     cur.execute("INSERT INTO chat_log(id, timestamp, user_id, user_question, sys_answer, sys_question) VALUES(%s,%s, %s, %s, %s, %s)", 
                 (str_id, timestamp, user_id, message_in, message_out, sys_question))
     con.commit()
-    return str_id
+    return str(str_id)
 
 # API chat message
 @app.route('/message/requestMessage', methods=["POST"])
@@ -631,17 +631,18 @@ def api_replySignal():
 #API report log
 @app.route('/log/report', methods=["POST"])
 def api_logReport():
-    logging.debug("REPORT")
-    try:
-        con = mysql.connect()
-        cur = con.cursor()
-        cur.execute("UPDATE chat_log SET report=%s WHERE id=%s",
-                    (request.form["report_type"], request.form["log_id"]))
-        con.commit()
-        cur.close()
-        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
-    except Exception as e:
-        return json.dumps({'error':e, 'success':False}), 500, {'ContentType':'application/json'}
+    # logging.debug("REPORT")
+    # try:
+    #     con = mysql.connect()
+    #     cur = con.cursor()
+    #     cur.execute("UPDATE chat_log SET report=%s WHERE id=%s",
+    #                 (request.form["report_type"], request.form["log_id"]))
+    #     con.commit()
+    #     cur.close()
+    #     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    # except Exception as e:
+    #     return json.dumps({'error':e, 'success':False}), 500, {'ContentType':'application/json'}
+    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
 
 if __name__ == '__main__':
     yaml_file = open(dir_path + '/NLP_model/intence.yaml', 'r')
