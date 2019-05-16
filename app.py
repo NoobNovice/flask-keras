@@ -499,19 +499,24 @@ def api_message():
         con = mysql.connect()
         cur = con.cursor()
 
-        if re.search(conver_stack[0][0], data["previous_message"]):
-            conver_stack[0][1] += 1
-            if conver_stack[0][1] > 5:
-                conver_stack.pop(0)
-            general_message = tag(conver_stack[0][0])
-            cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
-                    (general_message, data["message"], 0))
-            con.commit()
-            logging.debug("ANSWER CONVER ADDED")
-            message_out = "โอเคคราวหน้าเราจะได้ตอบถูก"
-            return jsonify(userID=data["userID"],previous_message="",message=message_out,
-                       sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=req + 1)
-        elif data["previous_message"] != "":
+        try:
+            if re.search(conver_stack[0][0], data["previous_message"]):
+                conver_stack[0][1] += 1
+                if conver_stack[0][1] > 5:
+                    conver_stack.pop(0)
+                general_message = tag(conver_stack[0][0])
+                cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
+                        (general_message, data["message"], 0))
+                con.commit()
+                logging.debug("ANSWER CONVER ADDED")
+                message_out = "โอเคคราวหน้าเราจะได้ตอบถูก"
+                return jsonify(userID=data["userID"],previous_message="",message=message_out,
+                                sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=req + 1)
+        except Exception as e:
+            if e is IndexError:
+                pass
+                
+        if data["previous_message"] != "":
             general_message = tag(data["previous_message"])
             cur.execute("SELECT * FROM template_conversation WHERE sentence_in=%s AND sentence=%s",
                         (general_message, data["message"]))
