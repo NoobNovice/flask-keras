@@ -191,6 +191,7 @@ def api_message():
             temp = [list(t) for t in temp]
             shuffle(temp)
             sending_message = temp[0][0]
+            logging.debug("MENU_NAME {}".format(MENU_NAME))
             sending_message = re.sub(r'MENU',MENU_NAME,sending_message)
         elif question_type == 1:
             logging.debug("RESTAURANT CASE")
