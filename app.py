@@ -500,16 +500,16 @@ def api_message():
         cur = con.cursor()
 
         try:
-            if re.match(conver_stack[0][0], data["previous_message"]):
-                conver_stack[0][1] += 1
-                if conver_stack[0][1] > 5:
-                    conver_stack.pop(0)
+            if conver_stack[0][0] == data["previous_message"]:
                 general_message = tag(conver_stack[0][0])
                 cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
                         (general_message, data["message"], 0))
                 con.commit()
                 logging.debug("ANSWER CONVER ADDED")
                 message_out = "โอเคคราวหน้าเราจะได้ตอบถูก"
+                conver_stack[0][1] += 1
+                if conver_stack[0][1] > 5:
+                    conver_stack.pop(0)
                 return jsonify(userID=data["userID"],previous_message="",message=message_out,
                                 sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=req + 1)
         except Exception as e:
@@ -546,9 +546,8 @@ def api_message():
             previous_message = ""
             message_out = "เอิ่มหมายถึงอะไรเหรอ"
         
-        cur.close()
         req = data["request_count"]
-        treshold = 1 - (req/15)
+        treshold = 1 - (req/10)
         alpha = random.random() - 0.1
         if alpha > treshold:
             req = 0
@@ -559,6 +558,7 @@ def api_message():
             except Exception as e:
                 pass
 
+        cur.close()
         log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
         logging.debug("LOG CREATED")
         logging.info("previous: {}".format(previous_message))
