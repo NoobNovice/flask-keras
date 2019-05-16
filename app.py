@@ -589,6 +589,7 @@ def api_replySignal():
     except:
         pass
     
+    logging.debug("question stack: {}".format(question_stack))
     # คิวคำถามร้านอาหาร
     try:
         if question_stack[0][0] != data["userID"]:
