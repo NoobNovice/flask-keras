@@ -427,16 +427,17 @@ def api_message():
                 sending_message = "ไม่มีเบอร์ร้านนี้อ่ะ"
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
+
+        if RES_NAME is not int:
+            RES_NAME = -1
+        if MENU is not int:
+            MENU = -1
         logging.debug("LOG CREATED")
         logging.info("res_id: {}".format(RES_NAME))
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
         logging.info("log id: {}".format(log_id))
         logging.info("menu id: {}".format(MENU))
-        if RES_NAME is not int:
-            RES_NAME = -1
-        if MENU is not int:
-            MENU = -1
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
@@ -498,28 +499,28 @@ def api_message():
         con = mysql.connect()
         cur = con.cursor()
 
-        if data["previous_message"] != "":
+        if re.search(conver_stack[0][0], data["previous_message"]):
+            conver_stack[0][1] += 1
+            if conver_stack[0][1] > 5:
+                conver_stack.pop(0)
+            general_message = tag(conver_stack[0][0])
+            cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
+                    (general_message, data["message"], 0))
+            con.commit()
+            logging.debug("ANSWER CONVER ADDED")
+            message_out = "โอเคคราวหน้าเราจะได้ตอบถูก"
+            return jsonify(userID=data["userID"],previous_message="",message=message_out,
+                       sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=req + 1)
+        elif data["previous_message"] != "":
             general_message = tag(data["previous_message"])
             cur.execute("SELECT * FROM template_conversation WHERE sentence_in=%s AND sentence=%s",
                         (general_message, data["message"]))
             temp = cur.fetchone()
             if not temp:
-                timestamp = datetime.now()
                 cur.execute("INSERT INTO template_conversation(sentence_in, sentence, use_count) VALUES(%s, %s, %s)", 
                     (general_message, data["message"], 0))
                 con.commit()
                 logging.debug("PAIR SENTENCE CREATED")
-        try:
-            if data["previous_message"] == question_stack[0]:
-                previous_message = ""
-                message_out = "โอเคจะคราวหน้าจะได้ตอบถูก"
-                logging.info("previous: {}".format(previous_message))
-                logging.info("message reply: {}".format(message_out))
-                logging.info("question: {}".format(sys_question))
-                return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
-                                sys_question=sys_question,res_topic="",request_count=req + 1)
-        except:
-            pass
 
         general_message = tag(data["message"])
         logging.info("Normalization: {}".format(general_message))
@@ -542,7 +543,7 @@ def api_message():
         
         cur.close()
         req = data["request_count"]
-        treshold = 1 - (req/5)
+        treshold = 1 - (req/15)
         alpha = random.random() - 0.1
         if alpha > treshold:
             req = 0
@@ -635,6 +636,8 @@ def api_replySignal():
 #API report log
 @app.route('/log/report', methods=["POST"])
 def api_logReport():
+    if request.form["log_id"] == "":
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
     try:
         con = mysql.connect()
         cur = con.cursor()
