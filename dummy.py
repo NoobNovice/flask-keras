@@ -1,6 +1,15 @@
-import logging
+from datetime import datetime
+import re
+from random import shuffle
+import random
+timestamp = datetime.now()
+str_id = str(timestamp)
+str_id = re.sub(r'[^0-9]', r'', str_id)
+str_id = str_id[4:]
+for i in range(len(str_id)):
+    index = random.randint(0,len(str_id)-1)
+    temp = str_id[i]
+    str_id[i] = str_id[index]
+    str_id[index] = temp
 
-logging.basicConfig(format='%(asctime)s - %(message)s', datefmt='%d-%b-%y %H:%M:%S',level=logging.DEBUG)
-x = 2
-logging.debug(x)
-logging.info(x)
+print(str_id)

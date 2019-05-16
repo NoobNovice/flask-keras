@@ -48,10 +48,13 @@ def create_logs(message_in, message_out, user_id, sys_question):
     con = mysql.connect()
     cur = con.cursor()
     timestamp = datetime.now()
-    cur.execute("INSERT INTO chat_log(timestamp, user_id, user_question, sys_answer, sys_question) VALUES(%s, %s, %s, %s, %s)", 
-                (timestamp, user_id, message_in, message_out, sys_question))
+    str_id = str(timestamp)
+    str_id = re.sub(r'[^0-9]', r'', str_id)
+    str_id = str_id[4:]
+    cur.execute("INSERT INTO chat_log(id, timestamp, user_id, user_question, sys_answer, sys_question) VALUES(%s,%s, %s, %s, %s, %s)", 
+                (str_id, timestamp, user_id, message_in, message_out, sys_question))
     con.commit()
-    return
+    return str_id
 
 # API chat message
 @app.route('/message/requestMessage', methods=["POST"])
@@ -227,7 +230,7 @@ def api_message():
                         RT = " ".join([temp[i][0] for i in range(len(temp))])
                     RES_NAME = data["res_topic"]    
                 except Exception as e:
-                    pass
+                    RES_NAME = -1
             else:
                 try:
                     logging.info("Search form name: {}".format(RES_NAME))
@@ -240,18 +243,18 @@ def api_message():
                     if len(temp) > 0:
                         RT = " ".join([temp[i][0] for i in range(len(temp))])            
                 except Exception as e:
-                    print(e)
+                    RES_NAME = -1
                     question_stack.append([data["userID"],data["message"],0])
                     logging.debug("QUESTION ADDED")
                     logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "")
+                    log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic="",request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
                     
             if RT != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RT%'))
@@ -286,12 +289,12 @@ def api_message():
                     logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "")
+                    log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic="",request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
             if RP != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RP%'))
                 temp = cur.fetchall()
@@ -326,12 +329,12 @@ def api_message():
                     logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "")
+                    log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic="",request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
 
             if RO != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RO%'))
@@ -367,12 +370,12 @@ def api_message():
                     logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "")
+                    log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic="",request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
             if RL != None:
                 sending_message = RL
             else:
@@ -402,12 +405,12 @@ def api_message():
                     logging.info("restaurant stack: {}".format(question_stack))
                     sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                     cur.close()
-                    create_logs(data["message"], sending_message, data["userID"], "")
+                    log_id = create_logs(data["message"], sending_message, data["userID"], "")
                     logging.info("previous: {}".format(data["message"]))
                     logging.info("message reply: {}".format(sending_message))
                     logging.info("question: {}".format(sys_question))
                     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic="",request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
             if RC != None:
                 cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RC%'))
                 temp = cur.fetchall()
@@ -418,13 +421,13 @@ def api_message():
             else:
                 sending_message = "ไม่มีเบอร์ร้านนี้อ่ะ"
         cur.close()
-        create_logs(data["message"], sending_message, data["userID"], "")
+        log_id = create_logs(data["message"], sending_message, data["userID"], "")
         logging.debug("LOG CREATED")
         logging.info("res_id: {}".format(RES_NAME))
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                   sys_question="",res_topic=RES_NAME,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
         con = mysql.connect()
         cur = con.cursor()
@@ -470,9 +473,9 @@ def api_message():
         except:
             pass
         print(ans_pool)
-        create_logs(data["message"], "message_out", data["userID"], "question_out")
+        log_id = create_logs(data["message"], "message_out", data["userID"], "question_out")
         return jsonify(userID=data["userID"],previous_message="",message="receive information: " + reliability,
-                   sys_question="",res_topic="",request_count=data["request_count"] + 1)
+                   sys_question="",res_topic="",menu_id="",log_id=log_id,request_count=data["request_count"] + 1)
     else:
         logging.debug("CONVERSATION CASE")
         logging.info("user message: {}".format(data["message"]))
@@ -615,6 +618,20 @@ def api_replySignal():
             return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
 
     return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
+
+#API report log
+@app.route('/log/report', methods=["POST"])
+def api_reportLog():
+    try:
+        con = mysql.connect()
+        cur = con.cursor()
+        cur.execute("UPDATE chat_log SET report=%s WHERE id=%s",
+                    (request.form["report_type"], request.form["log_id"]))
+        con.commit()
+        cur.close()
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    except Exception as e:
+        return json.dumps({'error':e, 'success':False}), 500, {'ContentType':'application/json'}
 
 if __name__ == '__main__':
     yaml_file = open(dir_path + '/NLP_model/intence.yaml', 'r')
