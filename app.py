@@ -581,11 +581,14 @@ def api_replySignal():
     
     logging.debug("answer pool: {}".format(ans_pool))
     # คิวคำตอบ
-    for i in range(len(ans_pool)):
-        if ans_pool[i][0] == data["userID"]:
-            sending_message = "เออร้านที่ถามครั้งก่อนอ่ะเพื่อนบอกมาว่า" + ans_pool[i][1]
-            ans_pool.pop(i)
-            return jsonify(userID=data["userID"],reply_data=sending_message,stage_data="answer")
+    try:
+        for i in range(len(ans_pool)):
+            if ans_pool[i][0] == data["userID"]:
+                sending_message = "เออร้านที่ถามครั้งก่อนอ่ะเพื่อนบอกมาว่า" + ans_pool[i][1]
+                ans_pool.pop(i)
+                return jsonify(userID=data["userID"],reply_data=sending_message,stage_data="answer")
+    except:
+        pass
     
     # คิวคำถามร้านอาหาร
     try:
@@ -597,7 +600,6 @@ def api_replySignal():
                 tempANS_list = []
             return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
     except Exception as e:
-        print(e)
         pass
 
     return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
