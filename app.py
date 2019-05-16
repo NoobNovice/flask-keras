@@ -559,8 +559,7 @@ def api_message():
         logging.info("question: {}".format(sys_question))
         logging.info("log id: {}".format(log_id))
         return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
-                       sys_question=sys_question,res_topic="",
-                       request_count=req + 1)
+                       sys_question=sys_question,res_topic="",menu_id="",log_id=log_id,request_count=req + 1)
 
 # API user provice
 @app.route('/user/', methods=["POST"])
@@ -631,7 +630,7 @@ def api_replySignal():
 #API report log
 @app.route('/log/report', methods=["POST"])
 def api_logReport():
-    # logging.debug("REPORT")
+    logging.debug("REPORT")
     # try:
     #     con = mysql.connect()
     #     cur = con.cursor()
