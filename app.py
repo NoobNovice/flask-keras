@@ -157,6 +157,7 @@ def api_message():
     logging.info("PRICE: {}".format(PRICE))
     logging.info("BRANCH: {}".format(BRANCH))
     logging.info("LOCATION: {}".format(LOCATION))
+    
     # หาว่าเป็นคลาสไหน
     predict_result = None
     with graph.as_default():
@@ -436,8 +437,9 @@ def api_message():
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
         logging.info("log id: {}".format(log_id))
+        if(RES_NAME != -1)
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                                    sys_question="",res_topic=RES_NAME,menu_id=data["menu_id"],log_id=log_id,request_count=data["request_count"] + 1)
+                                    sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
         # con = mysql.connect()
         # cur = con.cursor()
