@@ -622,6 +622,7 @@ def api_replySignal():
 #API report log
 @app.route('/log/report', methods=["POST"])
 def api_reportLog():
+    logging.debug("API REPORT")
     try:
         con = mysql.connect()
         cur = con.cursor()
