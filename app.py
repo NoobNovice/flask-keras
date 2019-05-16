@@ -559,7 +559,7 @@ def api_message():
         logging.info("question: {}".format(sys_question))
         logging.info("log id: {}".format(log_id))
         return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
-                       sys_question=sys_question,res_topic="",menu_id="",log_id=log_id,request_count=req + 1)
+                       sys_question=sys_question,res_topic=-1,menu_id=-1,log_id=log_id,request_count=req + 1)
 
 # API user provice
 @app.route('/user/', methods=["POST"])
@@ -630,18 +630,17 @@ def api_replySignal():
 #API report log
 @app.route('/log/report', methods=["POST"])
 def api_logReport():
-    logging.debug("REPORT")
-    # try:
-    #     con = mysql.connect()
-    #     cur = con.cursor()
-    #     cur.execute("UPDATE chat_log SET report=%s WHERE id=%s",
-    #                 (request.form["report_type"], request.form["log_id"]))
-    #     con.commit()
-    #     cur.close()
-    #     return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
-    # except Exception as e:
-    #     return json.dumps({'error':e, 'success':False}), 500, {'ContentType':'application/json'}
-    return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    try:
+        con = mysql.connect()
+        cur = con.cursor()
+        cur.execute("UPDATE chat_log SET report=%s WHERE id=%s",
+                    (request.form["report_type"], request.form["log_id"]))
+        con.commit()
+        cur.close()
+        logging.debug("LOG {} HAS REPORT".format(request.form["log_id"]))
+        return json.dumps({'success':True}), 200, {'ContentType':'application/json'}
+    except Exception as e:
+        return json.dumps({'error':e, 'success':False}), 500, {'ContentType':'application/json'}
 
 if __name__ == '__main__':
     yaml_file = open(dir_path + '/NLP_model/intence.yaml', 'r')
