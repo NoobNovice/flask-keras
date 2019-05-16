@@ -584,38 +584,38 @@ def api_userLogin():
 #API check signal
 @app.route('/signal', methods=["POST"])
 def api_replySignal():
-    con = mysql.connect()
-    cur = con.cursor()
-    data = json.loads(request.form["json_string"])
+    # con = mysql.connect()
+    # cur = con.cursor()
+    # data = json.loads(request.form["json_string"])
 
-    print("question stack: {}".format(question_stack))
-    print("conversation stack: {}".format(conver_stack))
-    # เช็คใน tabel คิวคำตอบ
-    cur.execute("SELECT * FROM restaurant_answer WHERE user_id=%s",(data["userID"]))
-    reply_answer = cur.fetchone()
-    if not reply_answer:
-        pass
-    else:
-        cur.execute("DELETE FROM restaurant_answer WHERE id=%s",(reply_answer[0]))
-        con.commit()
-        cur.execute("SELECT * FROM restaurant_info WHERE id=%s",(reply_answer[1]))
-        reply_answer = cur.fetchone()
-        cur.close()
-        sending_message = "เออร้านที่ถามครั้งก่อนอ่ะร้าน" + reply_answer[1] + "รู้ข้อมูลแล้วนะถามมาได้เลย"
-        return jsonify(userID=data["userID"],reply_data=sending_message,res_id=reply_answer[0],
-                       stage_data="answer")
+    # print("question stack: {}".format(question_stack))
+    # print("conversation stack: {}".format(conver_stack))
+    # # เช็คใน tabel คิวคำตอบ
+    # cur.execute("SELECT * FROM restaurant_answer WHERE user_id=%s",(data["userID"]))
+    # reply_answer = cur.fetchone()
+    # if not reply_answer:
+    #     pass
+    # else:
+    #     cur.execute("DELETE FROM restaurant_answer WHERE id=%s",(reply_answer[0]))
+    #     con.commit()
+    #     cur.execute("SELECT * FROM restaurant_info WHERE id=%s",(reply_answer[1]))
+    #     reply_answer = cur.fetchone()
+    #     cur.close()
+    #     sending_message = "เออร้านที่ถามครั้งก่อนอ่ะร้าน" + reply_answer[1] + "รู้ข้อมูลแล้วนะถามมาได้เลย"
+    #     return jsonify(userID=data["userID"],reply_data=sending_message,res_id=reply_answer[0],
+    #                    stage_data="answer")
     
-    # เช็คใน tabel คิวคำถามร้านอาหาร
-    if len(question_stack) == 0:
-        pass
-    else:
-        if question_stack[0][0] == data["userID"]:
-            sending_message = "ผมมีคำถามครับแนะนำข้อมูลร้าน " + question_stack[0][1] + " หน่อยสิ"
-            question_stack[0][2] += 1
-            if question_stack[0][2] > 5:
-                question_stack.pop(0)
-                ans_pool = [None,None,None,None,None,None,None,0,0]
-            return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
+    # # เช็คใน tabel คิวคำถามร้านอาหาร
+    # if len(question_stack) == 0:
+    #     pass
+    # else:
+    #     if question_stack[0][0] == data["userID"]:
+    #         sending_message = "ผมมีคำถามครับแนะนำข้อมูลร้าน " + question_stack[0][1] + " หน่อยสิ"
+    #         question_stack[0][2] += 1
+    #         if question_stack[0][2] > 5:
+    #             question_stack.pop(0)
+    #             ans_pool = [None,None,None,None,None,None,None,0,0]
+    #         return jsonify(userID=data["userID"],reply_data=sending_message,res_id="",stage_data="question")
 
     return jsonify(userID=data["userID"],reply_data="",res_id="",stage_data="")
 
