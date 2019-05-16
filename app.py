@@ -184,16 +184,13 @@ def api_message():
             temp = [list(t) for t in temp]
             logging.info("Search result: {}".format(len(temp)))
             shuffle(temp)
-            print(temp)
-            MENU_NAME = [0][0]
+            MENU_NAME = temp[0][0]
             MENU = temp[0][1]
             cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%MENU%'))
             temp = cur.fetchall()
             temp = [list(t) for t in temp]
             shuffle(temp)
             sending_message = temp[0][0]
-            logging.debug("MENU_NAME: {}".format(MENU_NAME))
-            logging.debug("MENU: {}".format(MENU))
             sending_message = re.sub(r'MENU',MENU_NAME,sending_message)
         elif question_type == 1:
             logging.debug("RESTAURANT CASE")
