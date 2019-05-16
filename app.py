@@ -439,11 +439,15 @@ def api_message():
     elif predict_result == 1:
         sending_message = ""
         logging.debug("INFORMATION CASE")
-        if data["previous_message"] == question_stack[0][1]:
-            logging.debug("CREATE ANSWER TEMP")
-            tempANS_list.append([data["userID"],data["message"],reliability])
-            sending_message = "ขอบใจมากนะ"
-        else:
+        try:
+            if data["previous_message"] == question_stack[0][1]:
+                logging.debug("CREATE ANSWER TEMP")
+                tempANS_list.append([data["userID"],data["message"],reliability])
+                sending_message = "ขอบใจมากนะ"
+            else:
+                logging.debug("CLASSIFY ERROR")
+                sending_message = "คลุมเครือเหลือเกิน ไม่เข้าใจคำถามอะ"
+        except:
             logging.debug("CLASSIFY ERROR")
             sending_message = "คลุมเครือเหลือเกิน ไม่เข้าใจคำถามอะ"
 
