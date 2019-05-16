@@ -193,12 +193,16 @@ def api_message():
         # เราแนะนำเมนูแล้วมันก้ถามต่อไปแดกร้านไหนดี
         elif question_type == 1:
             logging.debug("RESTAURANT CASE")
+            logging.info("menu id: {}".format(data["menu_id"]))
             if BRANCH != "":
                 logging.info("Search form branch")
                 cur.execute("SELECT res_id FROM restaurant_branch WHERE branch LIKE %s",('%'+BRANCH+'%'))
             elif MENU != "":
                 logging.info("Search form menu")
                 cur.execute("SELECT res_id FROM restaurant_tag WHERE tag LIKE %s",('%'+MENU+'%'))
+            elif data["menu_id"] != -1:
+                logging.info("Search form menu id")
+                cur.execute("SELECT res_id FROM restaurant_tag WHERE id=%",(data["menu_id"]))
             else:
                 logging.info("Search random")
                 cur.execute("SELECT id FROM restaurant_info")
@@ -481,7 +485,7 @@ def api_message():
         # print(ans_pool)
         # log_id = create_logs(data["message"], "message_out", data["userID"], "question_out")
         # logging.info("log id: {}".format(log_id))
-        return jsonify(userID=data["userID"],previous_message="",message="receive information: " + reliability,
+        return jsonify(userID=data["userID"],previous_message="",message="receive information: " + str(reliability),
                    sys_question="",res_topic="",menu_id="",log_id=log_id,request_count=data["request_count"] + 1)
     else:
         logging.debug("CONVERSATION CASE")
