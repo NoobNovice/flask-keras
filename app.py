@@ -437,7 +437,10 @@ def api_message():
         logging.info("previous: {}".format(data["message"]))
         logging.info("message reply: {}".format(sending_message))
         logging.info("log id: {}".format(log_id))
-        if(RES_NAME != -1)
+        if RES_NAME == "":
+            RES_NAME = -1
+        if MENU == "":
+            MENU = -1
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
