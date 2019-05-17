@@ -164,7 +164,7 @@ def api_message():
     with graph.as_default():
         predict_result = intence_model.predict(message_vec)
     predict_result = predict_result.tolist()
-    logging.info("intense predict: {}".format(predict_result))
+    # logging.info("intense predict: {}".format(predict_result))
     predict_result = predict_result[0].index(max(predict_result[0]))
     if predict_result == 0:
         logging.debug("RESTAURANT QUESTION CASE")
@@ -172,7 +172,7 @@ def api_message():
         with graph.as_default():
             question_type = question_model.predict(message_vec)
         question_type = question_type.tolist()
-        logging.info("question type predict: {}".format(question_type))
+        # logging.info("question type predict: {}".format(question_type))
         question_type = question_type[0].index(max(question_type[0]))
 
         sending_message = None
@@ -585,7 +585,7 @@ def api_message():
             message_out = "เอิ่มหมายถึงอะไรเหรอ"
         
         req = data["request_count"]
-        treshold = 1 - (req/10)
+        treshold = 1 - (req/20)
         alpha = random.random() - 0.1
         if alpha > treshold:
             req = 0
