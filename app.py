@@ -268,7 +268,19 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RT',RT,sending_message)
             else:
+                RES_NAME = -1
+                MENU = -1
+                question_stack.append([data["userID"],data["message"],0])
+                logging.debug("QUESTION ADDED")
+                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
+                cur.close()
+                log_id = create_logs(data["message"], sending_message, data["userID"], "")
+                logging.info("previous: {}".format(data["message"]))
+                logging.info("message reply: {}".format(sending_message))
+                logging.info("log id: {}".format(log_id))
+                return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                                sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
         elif question_type == 3:
             logging.debug("PRICE CASE")
             RP = None
@@ -307,7 +319,19 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RP',RP,sending_message)
             else:
+                RES_NAME = -1
+                MENU = -1
+                question_stack.append([data["userID"],data["message"],0])
+                logging.debug("QUESTION ADDED")
+                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
+                cur.close()
+                log_id = create_logs(data["message"], sending_message, data["userID"], "")
+                logging.info("previous: {}".format(data["message"]))
+                logging.info("message reply: {}".format(sending_message))
+                logging.info("log id: {}".format(log_id))
+                return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                                sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
         elif question_type == 4:
             logging.debug("TIME CASE")
             RO = None
@@ -347,7 +371,19 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RO',RO,sending_message)
             else:
-                sending_message = "ไม่รู้เวลาร้านนี้อ่ะ"
+                RES_NAME = -1
+                MENU = -1
+                question_stack.append([data["userID"],data["message"],0])
+                logging.debug("QUESTION ADDED")
+                logging.info("restaurant stack: {}".format(question_stack))
+                sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
+                cur.close()
+                log_id = create_logs(data["message"], sending_message, data["userID"], "")
+                logging.info("previous: {}".format(data["message"]))
+                logging.info("message reply: {}".format(sending_message))
+                logging.info("log id: {}".format(log_id))
+                return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                                sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
         elif question_type == 5:
             logging.debug("LOCATION CASE")
             RL = None
@@ -381,7 +417,19 @@ def api_message():
             if RL != None:
                 sending_message = RL
             else:
+                RES_NAME = -1
+                MENU = -1
+                question_stack.append([data["userID"],data["message"],0])
+                logging.debug("QUESTION ADDED")
+                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
+                cur.close()
+                log_id = create_logs(data["message"], sending_message, data["userID"], "")
+                logging.info("previous: {}".format(data["message"]))
+                logging.info("message reply: {}".format(sending_message))
+                logging.info("log id: {}".format(log_id))
+                return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                                sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
         else:
             logging.debug("CONTACT CASE")
             RC = None
@@ -420,7 +468,19 @@ def api_message():
                 sending_message = temp[0][0]
                 sending_message = re.sub(r'RC',RC,sending_message)
             else:
+                RES_NAME = -1
+                MENU = -1
+                question_stack.append([data["userID"],data["message"],0])
+                logging.debug("QUESTION ADDED")
+                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
+                cur.close()
+                log_id = create_logs(data["message"], sending_message, data["userID"], "")
+                logging.info("previous: {}".format(data["message"]))
+                logging.info("message reply: {}".format(sending_message))
+                logging.info("log id: {}".format(log_id))
+                return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                                sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
 
