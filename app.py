@@ -166,23 +166,22 @@ def api_message():
         predict_result = intence_model.predict(message_vec)
     predict_result = predict_result.tolist()
     predict_result = predict_result[0].index(max(predict_result[0]))
-    logging.info("predict_result: {}".format(predict_result))
-    return jsonify(userID=data["userID"],previous_message="",message=str(predict_result),
-                    sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=0)
-    # if predict_result == 0:
-    #     logging.debug("RESTAURANT QUESTION CASE")
-    #     question_type = None
-    #     with graph.as_default():
-    #         question_type = question_model.predict(message_vec)
-    #     question_type = question_type.tolist()
-    #     # logging.info("question type predict: {}".format(question_type))
-    #     question_type = question_type[0].index(max(question_type[0]))
-
-    #     sending_message = None
-    #     con = mysql.connect()
-    #     cur = con.cursor()
-    #     if question_type == 0:
-    #         logging.debug("MENU CASE")
+    # logging.info("predict_result: {}".format(predict_result))
+    if predict_result == 0:
+        logging.debug("RESTAURANT QUESTION CASE")
+        question_type = None
+        with graph.as_default():
+            question_type = question_model.predict(message_vec)
+        question_type = question_type.tolist()
+        # logging.info("question type predict: {}".format(question_type))
+        question_type = question_type[0].index(max(question_type[0]))
+        
+        sending_message = None
+        # con = mysql.connect()
+        # cur = con.cursor()
+        if question_type == 0:
+            logging.debug("MENU CASE")
+            sending_message = "แนะนำเมนูอาหาร"
     #         cur.execute("SELECT tag,id FROM restaurant_tag")
     #         temp = cur.fetchall()
     #         temp = [list(t) for t in temp]
@@ -196,9 +195,10 @@ def api_message():
     #         shuffle(temp)
     #         sending_message = temp[0][0]
     #         sending_message = re.sub(r'MENU',MENU_NAME,sending_message)
-    #     elif question_type == 1:
-    #         logging.debug("RESTAURANT CASE")
-    #         logging.info("menu id: {}".format(data["menu_id"]))
+        elif question_type == 1:
+            logging.debug("RESTAURANT CASE")
+            sending_message = "แนะนำร้านอาหาร"
+    #       logging.info("menu id: {}".format(data["menu_id"]))
     #         if LOCATION != "":
     #             logging.info("Search form LOCATION")
     #             cur.execute("SELECT res_id FROM restaurant_branch WHERE LOCATION LIKE %s",('%'+LOCATION+'%'))
@@ -226,8 +226,9 @@ def api_message():
     #         shuffle(temp)
     #         sending_message = temp[0][0]
     #         sending_message = re.sub(r'RN',RN,sending_message)
-    #     elif question_type == 2:
-    #         logging.debug("RESTAURANT TYPE CASE")
+        elif question_type == 2:
+            logging.debug("RESTAURANT TYPE CASE")
+            sending_message = "ถามประเภทร้านอาหาร"
     #         RT = None
     #         if RES_NAME == "" and data["res_topic"] != -1:
     #             logging.info("Search form res_id: {}".format(data["res_topic"]))
@@ -284,8 +285,9 @@ def api_message():
     #             logging.info("log id: {}".format(log_id))
     #             return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
     #                             sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
-    #     elif question_type == 3:
-    #         logging.debug("PRICE CASE")
+        elif question_type == 3:
+            logging.debug("PRICE CASE")
+            sending_message = "ถามราคาร้านอาหาร"
     #         RP = None
     #         if RES_NAME == "" and data["res_topic"] != -1:
     #             logging.info("Search form res_id: {}".format(data["res_topic"]))
@@ -335,8 +337,9 @@ def api_message():
     #             logging.info("log id: {}".format(log_id))
     #             return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
     #                             sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
-    #     elif question_type == 4:
-    #         logging.debug("TIME CASE")
+        elif question_type == 4:
+            logging.debug("TIME CASE")
+            sending_message = "ถามเวลาเปิดปิดร้านอาหาร"
     #         RO = None
     #         if RES_NAME == "" and data["res_topic"] != -1:
     #             logging.info("Search form res_id: {}".format(data["res_topic"]))
@@ -387,8 +390,9 @@ def api_message():
     #             logging.info("log id: {}".format(log_id))
     #             return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
     #                             sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
-    #     elif question_type == 5:
-    #         logging.debug("LOCATION CASE")
+        elif question_type == 5:
+            logging.debug("LOCATION CASE")
+            sending_message = "ถามลิ้งค์ร้านอาหาร"
     #         RL = None
     #         if RES_NAME == "" and data["res_topic"] != -1:
     #             logging.info("Search form res_id: {}".format(data["res_topic"]))
@@ -433,8 +437,9 @@ def api_message():
     #             logging.info("log id: {}".format(log_id))
     #             return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
     #                             sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
-    #     else:
-    #         logging.debug("CONTACT CASE")
+        else:
+            logging.debug("CONTACT CASE")
+            sending_message = "ถามเบอร์โทรศัพท์ร้านอาหาร"
     #         RC = None
     #         if RES_NAME == "" and data["res_topic"] != -1:
     #             logging.info("Search form res_id: {}".format(data["res_topic"]))
@@ -497,8 +502,8 @@ def api_message():
     #     logging.info("message reply: {}".format(sending_message))
     #     logging.info("log id: {}".format(log_id))
     #     logging.info("menu id: {}".format(MENU))
-    #     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-    #                     sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
+        return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                        sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     # elif predict_result == 1:
     #     sending_message = ""
     #     logging.debug("INFORMATION CASE")
