@@ -504,7 +504,9 @@ def api_message():
     #     logging.info("menu id: {}".format(MENU))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
                         sys_question="",res_topic="RES_NAME",menu_id="MENU",log_id="log_id",request_count=data["request_count"] + 1)
-    # elif predict_result == 1:
+    elif predict_result == 1:
+        return jsonify(userID=data["userID"],previous_message=data["message"],message="INFORMATION",
+                        sys_question="",res_topic="RES_NAME",menu_id="MENU",log_id="log_id",request_count=data["request_count"] + 1)
     #     sending_message = ""
     #     logging.debug("INFORMATION CASE")
     #     try:
@@ -535,7 +537,9 @@ def api_message():
     #     logging.info("log id: {}".format(log_id))
     #     return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
     #                     sys_question="",res_topic=-1,menu_id=-1,log_id=log_id,request_count=data["request_count"])  
-    # else:
+    else:
+        return jsonify(userID=data["userID"],previous_message=data["message"],message="CONVERSATION",
+                        sys_question="",res_topic="RES_NAME",menu_id="MENU",log_id="log_id",request_count=data["request_count"] + 1)
     #     logging.debug("CONVERSATION CASE")
     #     logging.info("user message: {}".format(data["message"]))
     #     logging.info("previous message: {}".format(data["previous_message"]))
