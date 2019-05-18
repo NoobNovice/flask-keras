@@ -77,7 +77,8 @@ def api_message():
             word_count += 1
         except:
             pass
-    logging.info("word vector: {}".format(message_vec[0,24:34,]))
+    logging.info("word in model: {}".format(message_inModel))
+    logging.info("word vector: {}".format(message_vec[0,24:,]))
     # # ทำ NER
     # name_tag = None
     # RES_NAME = []
