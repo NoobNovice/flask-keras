@@ -77,7 +77,7 @@ def api_message():
             word_count += 1
         except:
             pass
-    logging.info("word vector: {}".format(message_vec))
+    logging.info("word vector: {}".format(message_vec[30:34]))
     # # ทำ NER
     # name_tag = None
     # RES_NAME = []
@@ -166,6 +166,8 @@ def api_message():
     predict_result = predict_result.tolist()
     predict_result = predict_result[0].index(max(predict_result[0]))
     logging.info("predict_result: {}".format(predict_result))
+    return jsonify(userID=data["userID"],previous_message="",message=str(predict_result),
+                    sys_question="",res_topic=-1,menu_id=-1,log_id="",request_count=0)
     # if predict_result == 0:
     #     logging.debug("RESTAURANT QUESTION CASE")
     #     question_type = None
