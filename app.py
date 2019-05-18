@@ -503,7 +503,7 @@ def api_message():
     #     logging.info("log id: {}".format(log_id))
     #     logging.info("menu id: {}".format(MENU))
         return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
-                        sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
+                        sys_question="",res_topic="RES_NAME",menu_id="MENU",log_id="log_id",request_count=data["request_count"] + 1)
     # elif predict_result == 1:
     #     sending_message = ""
     #     logging.debug("INFORMATION CASE")
