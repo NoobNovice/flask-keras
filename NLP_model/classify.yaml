@@ -75,7 +75,7 @@ config:
       kernel_regularizer: null
       name: dense_1
       trainable: true
-      units: 7
+      units: 9
       use_bias: true
     inbound_nodes:
     - - - dropout_1
