@@ -189,8 +189,6 @@ def api_message():
 
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
-        if RES_NAME is not int:
-            RES_NAME = -1
         if MENU is not int:
             MENU = -1
         logging.debug("LOG CREATED")
@@ -213,6 +211,7 @@ def api_message():
         elif data["menu_id"] != -1:
             logging.info("Search form menu id: {}".format(data["menu_id"]))
             cur.execute("SELECT res_id FROM restaurant_tag WHERE id=%",(data["menu_id"]))
+            MENU = data["menu_id"]
         else:
             logging.info("Search random")
             cur.execute("SELECT id FROM restaurant_info")
@@ -267,7 +266,7 @@ def api_message():
                 temp = cur.fetchall()
                 logging.info("Search tag: {}".format(len(temp)))
                 if len(temp) > 0:
-                    RT = " ".join([temp[i][0] for i in range(len(temp))])            
+                    RT = " ".join([temp[i][0] for i in range(len(temp))])
             except Exception as e:
                 RES_NAME = -1
                 MENU = -1
