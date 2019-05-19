@@ -641,7 +641,7 @@ def api_message():
             key_list = basic_con.keys()
             for i in key_list:
                 print(i)
-                if re.search(i,data["message"])
+                if re.search(i,data["message"]):
                     sending_message = basic_con[i]
                     log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
                     return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
