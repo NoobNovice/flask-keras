@@ -33,7 +33,7 @@ question_stack = []
 conver_stack = []
 ans_pool = []
 tempANS_list = []
-basic_con = {"สวัสดี":"สวัสดี","ลา":"ลาก่อย","บาย":"บาย","ขอบคุณ":"ไม่เป้นไร"}
+basic_con = {"สวัสดี":"สวัสดี","ลา":"ลาก่อย","บาย":"บาย","ขอบคุณ":"ไม่เป้นไร","ขอบใจ":"ด้วยความยินดีจ้า"}
 
 # web config
 app = Flask(__name__)
@@ -640,8 +640,8 @@ def api_message():
         else:
             key_list = basic_con.keys()
             for i in key_list:
-                print(i)
                 if re.search(i,data["message"]):
+                    print("sending message: {}".format(basic_con[i]))
                     sending_message = basic_con[i]
                     return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
                                     sys_question="",res_topic=-1,menu_id=-1,log_id=log_id,request_count=req + 1)
