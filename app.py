@@ -447,6 +447,7 @@ def api_message():
             logging.info("Search form res_id: {}".format(data["res_topic"]))
             cur.execute("SELECT address FROM restaurant_info WHERE id=%s",(data["res_topic"]))
             temp = cur.fetchone()
+            print("temp: {}".format(temp))
             RL = temp[0]
             RES_NAME = int(data["res_topic"])
         elif RES_NAME != "":
@@ -498,18 +499,18 @@ def api_message():
     elif predict_result == 6:
         logging.debug("CONTACT CASE")
         RC = None
-        if RES_NAME == "" and data["res_topic"] != -1:
+        if RES_NAME == "" and int(data["res_topic"]) != -1:
             logging.info("Search form res_id: {}".format(data["res_topic"]))
             cur.execute("SELECT contact FROM restaurant_info WHERE id=%s",(data["res_topic"]))
             temp = cur.fetchone()
             RC = temp[0]
-            RES_NAME = data["res_topic"]
+            RES_NAME = int(data["res_topic"])
         elif RES_NAME != "":
             try:
                 logging.info("Search form name: {}".format(RES_NAME))
                 cur.execute("SELECT contact,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                 temp = cur.fetchone()
-                RES_NAME = temp[1]
+                RES_NAME = int(temp[1])
                 RC = temp[0]            
             except Exception as e:
                 RES_NAME = -1
@@ -533,10 +534,7 @@ def api_message():
             sending_message = re.sub(r'RC',RC,sending_message)
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
-            if RES_NAME is not int:
-                RES_NAME = -1
-            if MENU is not int:
-                MENU = -1
+            MENU = -1
             logging.debug("LOG CREATED")
             logging.info("res_id: {}".format(RES_NAME))
             logging.info("previous: {}".format(data["message"]))
