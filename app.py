@@ -201,7 +201,7 @@ def api_message():
         logging.info("menu id: {}".format(data["menu_id"]))
         if LOCATION != "":
             logging.info("Search form LOCATION")
-            cur.execute("SELECT res_id FROM restaurant_branch WHERE LOCATION LIKE %s",('%'+LOCATION+'%'))
+            cur.execute("SELECT res_id FROM restaurant_branch WHERE branch LIKE %s",('%'+LOCATION+'%'))
         elif MENU != "":
             logging.info("Search form menu")
             cur.execute("SELECT res_id FROM restaurant_tag WHERE tag LIKE %s",('%'+MENU+'%'))
