@@ -198,13 +198,14 @@ def api_message():
                         sys_question="",res_topic=RES_NAME,menu_id=MENU,log_id=log_id,request_count=data["request_count"] + 1)
     elif predict_result == 1:
         logging.debug("RESTAURANT CASE")
-        logging.info("menu id: {}".format(data["menu_id"]))
         if LOCATION != "":
             logging.info("Search form LOCATION")
             cur.execute("SELECT res_id FROM restaurant_branch WHERE branch LIKE %s",('%'+LOCATION+'%'))
+            sending_message = "ไม่รู้จักร้านแถว " + LOCATION + " มาก่อนเลยครับ"
         elif MENU != "":
             logging.info("Search form menu")
             cur.execute("SELECT res_id FROM restaurant_tag WHERE tag LIKE %s",('%'+MENU+'%'))
+            sending_message = "ไม่รู้จักร้าน " + MENU + " อ่ะ"
         elif int(data["menu_id"]) != -1:
             logging.info("Search form menu id: {}".format(data["menu_id"]))
             cur.execute("SELECT res_id FROM restaurant_tag WHERE id=%s",(data["menu_id"]))
@@ -216,6 +217,11 @@ def api_message():
         RN = None
         temp = [list(t) for t in temp]
         logging.info("Search result: {}".format(len(temp)))
+        if len(temp) == 0:
+            cur.close()
+            log_id = create_logs(data["message"], sending_message, data["userID"], "")
+            return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                            sys_question="",res_topic=-1,menu_id=-1,log_id=log_id,request_count=data["request_count"] + 1)
         shuffle(temp)
         RES_NAME = temp[0][0]
         cur.execute("SELECT name FROM restaurant_info WHERE id=%s",(RES_NAME))
