@@ -1,6 +1,6 @@
-import re
+x = 1
 
-x = "dsdfa  xxxx skjjf;al"
-
-if re.search("xxxx",x):
-    print("k")
+if x is not int:
+    print("string")
+else:
+    print("int")
