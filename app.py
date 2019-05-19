@@ -231,8 +231,6 @@ def api_message():
 
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
-        if RES_NAME == "":
-            RES_NAME = -1
         if MENU == "":
             MENU = -1
         logging.debug("LOG CREATED")
