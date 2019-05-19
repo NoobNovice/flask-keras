@@ -643,7 +643,6 @@ def api_message():
                 print(i)
                 if re.search(i,data["message"]):
                     sending_message = basic_con[i]
-                    log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
                     return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
                                     sys_question="",res_topic=-1,menu_id=-1,log_id=log_id,request_count=req + 1)
             conver_stack.append([data["message"],0])
