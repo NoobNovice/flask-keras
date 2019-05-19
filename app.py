@@ -704,7 +704,7 @@ def api_userLogin():
 def api_replySignal():
     data = json.loads(request.form["json_string"])
     
-    logging.debug("answer pool: {}".format(ans_pool))
+    # logging.debug("answer pool: {}".format(ans_pool))
     # คิวคำตอบ
     try:
         for i in range(len(ans_pool)):
