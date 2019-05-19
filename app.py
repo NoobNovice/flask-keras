@@ -449,7 +449,12 @@ def api_message():
             cur.execute("SELECT address FROM restaurant_info WHERE id=%s",(data["res_topic"]))
             temp = cur.fetchone()
             print("temp: {}".format(temp))
-            RL = temp[0]
+            try:
+                RL = temp[0]
+            except:
+                sending_message = "ร้านไม่มีที่อยู่ครับ"
+                return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                            sys_question="",res_topic=-1,menu_id=-1,log_id=-1,request_count=data["request_count"] + 1)
             RES_NAME = int(data["res_topic"])
         elif RES_NAME != "":
             try:
@@ -457,7 +462,12 @@ def api_message():
                 cur.execute("SELECT address,id FROM restaurant_info WHERE name LIKE %s",('%'+RES_NAME+'%'))
                 temp = cur.fetchone()
                 RES_NAME = int(temp[1])
-                RL = temp[0]   
+                try:
+                    RL = temp[0]
+                except:
+                    sending_message = "ร้านไม่มีที่อยู่ครับ"
+                    return jsonify(userID=data["userID"],previous_message=data["message"],message=sending_message,
+                                    sys_question="",res_topic=-1,menu_id=-1,log_id=-1,request_count=data["request_count"] + 1)   
             except Exception as e:
                 RES_NAME = -1
                 MENU = -1
