@@ -217,8 +217,9 @@ def api_message():
         temp = [list(t) for t in temp]
         logging.info("Search result: {}".format(len(temp)))
         shuffle(temp)
-        RES_NAME = int(temp[0][0])
+        RES_NAME = temp[0][0]
         cur.execute("SELECT name FROM restaurant_info WHERE id=%s",(RES_NAME))
+        RES_NAME = int(temp[0][0])
         temp = cur.fetchone()
         RN = temp[0]
         cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%RN%'))
