@@ -644,7 +644,7 @@ def api_message():
                     print("sending message: {}".format(basic_con[i]))
                     sending_message = basic_con[i]
                     return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
-                                    sys_question="",res_topic=-1,menu_id=-1,log_id=-1,request_count=req + 1)
+                                    sys_question="",res_topic=-1,menu_id=-1,log_id=-1,request_count=data["request_count"] + 1)
             conver_stack.append([data["message"],0])
             logging.debug("QUESTION STACKED")
             previous_message = ""
