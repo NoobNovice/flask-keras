@@ -172,14 +172,13 @@ def api_message():
     sending_message = None
     if predict_result == 0:
         logging.debug("MENU CASE")
-        sending_message = "แนะนำเมนูอาหาร"
         cur.execute("SELECT tag,id FROM restaurant_tag")
         temp = cur.fetchall()
         temp = [list(t) for t in temp]
         logging.info("Search result: {}".format(len(temp)))
         shuffle(temp)
         MENU_NAME = temp[0][0]
-        MENU = temp[0][1]
+        MENU = int(temp[0][1])
         cur.execute("SELECT answer FROM template_answer WHERE answer LIKE %s",('%MENU%'))
         temp = cur.fetchall()
         temp = [list(t) for t in temp]
@@ -189,8 +188,6 @@ def api_message():
 
         cur.close()
         log_id = create_logs(data["message"], sending_message, data["userID"], "")
-        if MENU is not int:
-            MENU = -1
         logging.debug("LOG CREATED")
         logging.info("res_id: {}".format(RES_NAME))
         logging.info("previous: {}".format(data["message"]))
