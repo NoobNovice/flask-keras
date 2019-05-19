@@ -33,6 +33,7 @@ question_stack = []
 conver_stack = []
 ans_pool = []
 tempANS_list = []
+basic_con = {"สวัสดี":"สวัสดี","ลา":"ลาก่อย","บาย":"บาย","ขอบคุณ":"ไม่เป้นไร"}
 
 # web config
 app = Flask(__name__)
@@ -637,6 +638,13 @@ def api_message():
             previous_message = temp[0][2]
             message_out = temp[0][2]
         else:
+            key_list = basic_con.keys()
+            for i in key_list:
+                if re.search(i,data["message"])
+                    sending_message = basic_con[i]
+                    log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
+                    return jsonify(userID=data["userID"],previous_message=previous_message,message=message_out,
+                                    sys_question="",res_topic=-1,menu_id=-1,log_id=log_id,request_count=req + 1)
             conver_stack.append([data["message"],0])
             logging.debug("QUESTION STACKED")
             previous_message = ""
