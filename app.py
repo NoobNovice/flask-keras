@@ -78,7 +78,6 @@ def api_message():
         except:
             pass
     logging.info("word in model: {}".format(message_inModel[24:]))
-    logging.info("word vector: {}".format(message_vec[0,24:,]))
     # ทำ NER
     name_tag = None
     RES_NAME = []
@@ -274,7 +273,6 @@ def api_message():
                 MENU = -1
                 question_stack.append([data["userID"],data["message"],0])
                 logging.debug("QUESTION ADDED")
-                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                 cur.close()
                 log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -310,7 +308,6 @@ def api_message():
             MENU = -1
             question_stack.append([data["userID"],data["message"],0])
             logging.debug("QUESTION ADDED")
-            logging.info("restaurant stack: {}".format(question_stack))
             sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -340,7 +337,6 @@ def api_message():
                 MENU = -1
                 question_stack.append([data["userID"],data["message"],0])
                 logging.debug("QUESTION ADDED")
-                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                 cur.close()
                 log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -376,7 +372,6 @@ def api_message():
             MENU = -1
             question_stack.append([data["userID"],data["message"],0])
             logging.debug("QUESTION ADDED")
-            logging.info("restaurant stack: {}".format(question_stack))
             sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -406,7 +401,6 @@ def api_message():
                 MENU = -1
                 question_stack.append([data["userID"],data["message"],0])
                 logging.debug("QUESTION ADDED")
-                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                 cur.close()
                 log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -442,7 +436,6 @@ def api_message():
             MENU = -1
             question_stack.append([data["userID"],data["message"],0])
             logging.debug("QUESTION ADDED")
-            logging.info("restaurant stack: {}".format(question_stack))
             sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -472,7 +465,6 @@ def api_message():
                 MENU = -1
                 question_stack.append([data["userID"],data["message"],0])
                 logging.debug("QUESTION ADDED")
-                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                 cur.close()
                 log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -502,7 +494,6 @@ def api_message():
             MENU = -1
             question_stack.append([data["userID"],data["message"],0])
             logging.debug("QUESTION ADDED")
-            logging.info("restaurant stack: {}".format(question_stack))
             sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -532,7 +523,6 @@ def api_message():
                 MENU = -1
                 question_stack.append([data["userID"],data["message"],0])
                 logging.debug("QUESTION ADDED")
-                logging.info("restaurant stack: {}".format(question_stack))
                 sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
                 cur.close()
                 log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -567,7 +557,6 @@ def api_message():
             MENU = -1
             question_stack.append([data["userID"],data["message"],0])
             logging.debug("QUESTION ADDED")
-            logging.info("restaurant stack: {}".format(question_stack))
             sending_message = "ไม่รู้จักร้านนี้อ่ะ เดี่ยวถามเพื่อนแปป"
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
@@ -659,7 +648,6 @@ def api_message():
         else:
             conver_stack.append([data["message"],0])
             logging.debug("QUESTION STACKED")
-            logging.info("question stack: {}".format(conver_stack))
             previous_message = ""
             message_out = "เอิ่มหมายถึงอะไรเหรอ"
         
@@ -728,7 +716,7 @@ def api_replySignal():
     except:
         pass
     
-    logging.debug("question stack: {}".format(question_stack))
+    # logging.debug("question stack: {}".format(question_stack))
     # คิวคำถามร้านอาหาร
     try:
         if question_stack[0][0] != data["userID"]:
