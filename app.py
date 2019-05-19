@@ -244,14 +244,14 @@ def api_message():
     elif predict_result == 2:
         logging.debug("RESTAURANT TYPE CASE")
         RT = None
-        if RES_NAME == "" and data["res_topic"] != -1:
+        if RES_NAME == "" and int(data["res_topic"]) != -1:
             logging.info("Search form res_id: {}".format(data["res_topic"]))
             cur.execute("SELECT tag FROM restaurant_tag WHERE 	res_id=%s",(data["res_topic"]))
             temp = cur.fetchall()
             logging.info("Search tag: {}".format(len(temp)))
             if len(temp) > 0:
                 RT = " ".join([temp[i][0] for i in range(len(temp))])
-            RES_NAME = data["res_topic"]    
+            RES_NAME = int(data["res_topic"])    
         elif RES_NAME != "":
             try:
                 logging.info("Search form name: {}".format(RES_NAME))
@@ -259,6 +259,7 @@ def api_message():
                 temp = cur.fetchone()
                 RES_NAME = temp[0]
                 cur.execute("SELECT tag FROM restaurant_tag WHERE res_id=%s",(RES_NAME))
+                RES_NAME = int(temp[0])
                 temp = cur.fetchall()
                 logging.info("Search tag: {}".format(len(temp)))
                 if len(temp) > 0:
@@ -286,9 +287,7 @@ def api_message():
             sending_message = re.sub(r'RT',RT,sending_message)
             cur.close()
             log_id = create_logs(data["message"], sending_message, data["userID"], "")
-            if RES_NAME is not int:
-                RES_NAME = -1
-            if MENU is not int:
+            if MENU == "":
                 MENU = -1
             logging.debug("LOG CREATED")
             logging.info("res_id: {}".format(RES_NAME))
