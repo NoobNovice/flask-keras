@@ -640,6 +640,7 @@ def api_message():
         else:
             key_list = basic_con.keys()
             for i in key_list:
+                print(i)
                 if re.search(i,data["message"])
                     sending_message = basic_con[i]
                     log_id = create_logs(data["message"], message_out, data["userID"], sys_question)
