@@ -205,10 +205,10 @@ def api_message():
         elif MENU != "":
             logging.info("Search form menu")
             cur.execute("SELECT res_id FROM restaurant_tag WHERE tag LIKE %s",('%'+MENU+'%'))
-        elif data["menu_id"] != -1:
+        elif int(data["menu_id"]) != -1:
             logging.info("Search form menu id: {}".format(data["menu_id"]))
             cur.execute("SELECT res_id FROM restaurant_tag WHERE id=%",(data["menu_id"]))
-            MENU = data["menu_id"]
+            MENU = int(data["menu_id"])
         else:
             logging.info("Search random")
             cur.execute("SELECT id FROM restaurant_info")
@@ -217,7 +217,7 @@ def api_message():
         temp = [list(t) for t in temp]
         logging.info("Search result: {}".format(len(temp)))
         shuffle(temp)
-        RES_NAME = temp[0][0]
+        RES_NAME = int(temp[0][0])
         cur.execute("SELECT name FROM restaurant_info WHERE id=%s",(RES_NAME))
         temp = cur.fetchone()
         RN = temp[0]
