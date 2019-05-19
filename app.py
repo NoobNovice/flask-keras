@@ -571,7 +571,7 @@ def api_message():
             sending_message = "คลุมเครือเหลือเกิน ไม่เข้าใจคำถามอะ"
 
         try:
-            if len(tempANS_list) >= 5:
+            if len(tempANS_list) >= 3:
                 logging.debug("ANS CREATE")
                 max_index = []
                 for i in tempANS_list:
