@@ -714,7 +714,7 @@ def api_userLogin():
 def api_replySignal():
     data = json.loads(request.form["json_string"])
     
-    # logging.debug("answer pool: {}".format(ans_pool))
+    logging.debug("answer pool: {}".format(ans_pool))
     # คิวคำตอบ
     try:
         for i in range(len(ans_pool)):
@@ -725,7 +725,7 @@ def api_replySignal():
     except:
         pass
     
-    # logging.debug("question stack: {}".format(question_stack))
+    logging.debug("question stack: {}".format(question_stack))
     # คิวคำถามร้านอาหาร
     try:
         if question_stack[0][0] != data["userID"]:
